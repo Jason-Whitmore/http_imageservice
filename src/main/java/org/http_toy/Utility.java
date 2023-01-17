@@ -1,0 +1,431 @@
+package org.http_toy;
+
+import java.util.Map;
+import java.util.HashMap;
+
+import java.util.List;
+import java.util.ArrayList;
+
+public class Utility {
+    
+
+    public static int[][][] convertRGBImageToGrayscaleImage(int[][][] rgbImage){
+        int rows = rgbImage.length;
+        int cols = rgbImage[0].length;
+
+        int[][][] grayImage = new int[rows][cols][1];
+
+        for(int r = 0; r < rows; r++){
+            for(int c = 0; c < cols; c++){
+                int red = rgbImage[r][c][0];
+                int green = rgbImage[r][c][1];
+                int blue = rgbImage[r][c][2];
+
+                grayImage[r][c][0] = (red + green + blue) / 3;
+            }
+        }
+
+
+        return grayImage;
+    }
+
+
+    public static String imageDataToHexString(int[][][] imageData){
+        int[] flatImageData = Utility.flatten(imageData);
+
+        String binaryStringData = Utility.integerArrayToBinaryString(flatImageData);
+
+        String hexStringData = Utility.binaryStringToHexString(binaryStringData);
+
+        return hexStringData;
+    }
+
+    public static int[][][] hexStringToImageData(String hexString){
+        String binaryString = Utility.hexStringToBinaryString(hexString);
+
+        int[] flatImage = Utility.binaryStringToIntegerArray(binaryString);
+
+        int[][][] image = Utility.flatImageToImage(flatImage);
+
+        return image;
+    }
+
+    public static String integerArrayToBinaryString(int[] array){
+        StringBuilder sb = new StringBuilder();
+
+        for(int i = 0; i < array.length; i++){
+            sb.append(Utility.integerToBinaryString(array[i]));
+        }
+        return sb.toString();
+    }
+
+    public static int[] binaryStringToIntegerArray(String binaryString){
+        int[] array = new int[binaryString.length() / 8];
+
+        for(int i = 0; i < binaryString.length(); i += 8){
+            String byteString = binaryString.substring(i, i + 8);
+
+            array[i / 8] = Utility.binaryStringToInteger(byteString);
+        }
+
+        return array;
+    }
+
+    public static int[][][] flatImageToImage(int[] flatImage){
+        int rows = flatImage[0];
+        int cols = flatImage[1];
+        int channels = flatImage[2];
+
+        int[][][] image = new int[rows][cols][channels];
+        int index = 3;
+
+        for(int r = 0; r < rows; r++){
+            for(int c = 0; c < cols; c++){
+                for(int channel = 0; channel < channels; channel++){
+                    image[r][c][channel] = flatImage[index];
+                    index++;
+                }
+            }
+        }
+
+        return image;
+    }
+
+    public static int[] imageToFlatImage(int[][][] image){
+        int length = image.length * image[0].length * image[0][0].length;
+
+        //Create flat array, include dimension size in header
+        int[] r = new int[3 + length];
+        r[0] = image.length;
+        r[1] = image[0].length;
+        r[2] = image[0][0].length;
+
+        int[] flatImageData = Utility.flatten(image);
+
+        for(int i = 0; i < flatImageData.length; i++){
+            r[i + 3] = flatImageData[i];
+        }
+
+        return r;
+    }
+
+    public static int[] flattenArray(int[][][] array){
+        int imageSize = array.length * array[0].length * array[0][0].length;
+
+        int[] r = new int[imageSize];
+
+        int index = 0;
+
+        for(int i = 0; i < array.length; i++){
+            for(int j = 0; j < array[0].length; j++){
+                for(int k = 0; k < array[0][0].length; k++){
+                    r[index] = array[i][j][k];
+                    index++;
+                }
+            }
+        }
+
+        return r;
+    }
+
+    public static String hexStringToBinaryString(String hexString){
+        StringBuilder sb = new StringBuilder();
+
+        for(int i = 0; i < hexString.length(); i++){
+            char hexDigit = hexString.charAt(i);
+
+            int number = Utility.hexToInteger(hexDigit);
+
+            String binary = Utility.integerToBinaryString(number);
+
+            sb.append(binary);
+        }
+
+        return sb.toString();
+    }
+
+
+    public static String integerToBinaryString(int num){
+        char[] c = new char[8];
+
+        //Initial population
+        for(int i = 0; i < c.length; i++){
+            c[i] = '0';
+        }
+
+        //todo: issue with temp. should not be at 0
+        int temp = num;
+        int index = 0;
+
+        while(temp > 0){
+            if(temp % 2 == 0){
+                c[index] = '0';
+            } else {
+                c[index] = '1';
+            }
+
+            temp /= 2;
+            index++;
+        }
+        
+        
+        return new String(c);
+    }
+
+    public static int[] flatten(int[][][] array){
+        int length = array.length * array[0].length * array[0][0].length;
+
+        int[] ret = new int[length];
+
+        int i = 0;
+
+        for(int r = 0; r < array.length; r++){
+            for(int c = 0; c < array[r].length; c++){
+                for(int k = 0; k < array[r][c].length; k++){
+                    ret[i] = array[r][c][k];
+                    i++;
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    public static String binaryStringToHexString(String binaryString){
+        StringBuilder sb = new StringBuilder();
+
+        for(int i = 0; i < binaryString.length(); i+=4){
+            String nibble = binaryString.substring(i, i + 4);
+
+            int num = Utility.binaryStringToInteger(nibble);
+
+            char hex = Utility.integerToHex(num);
+
+            sb.append(hex);
+        }
+
+
+        return sb.toString();
+    }
+
+    public static int binaryStringToInteger(String binaryString){
+        int r = 0;
+
+        char[] c = binaryString.toCharArray();
+
+        int exponent = 0;
+        for(int i = c.length - 1; i >= 0; i--){
+            if(c[i] == '1'){
+                r += (1 << exponent);
+            }
+
+            exponent++;
+        }
+
+        return r;
+    }
+
+    public static char integerToHex(int num){
+        if(num <= 9){
+            return (char)((int)'0' + num);
+        } else {
+            return (char)((int)'a' + num - 10);
+        }
+    }
+
+    public static int hexToInteger(char digit){
+        int ascii = (int)digit;
+
+        if(ascii <= ((int)'9') && ascii >= ((int)'0')){
+            return (int) (ascii - ((int)'0'));
+        } else {
+            return ((int) (ascii - ((int)'a'))) + 10;
+        }
+    }
+
+    public static int[] getMostCommonColor(int[][][] imgData){
+        Map<List<Integer>, Integer> colorMap = new HashMap<>();
+
+        //Count colors
+        for(int r = 0; r < imgData.length; r++){
+            for(int c = 0; c < imgData[r].length; c++){
+                List<Integer> colors = Utility.arrayToList(imgData[r][c]);
+
+                //Add to map or increment
+                if(colorMap.containsKey(colors)){
+                    colorMap.put(colors, colorMap.get(colors) + 1);
+                } else {
+                    colorMap.put(colors, 1);
+                }
+            }
+        }
+
+        //Select most commonly occuring
+        int max = 0;
+        List<Integer> bestColor = null;
+
+        for(List<Integer> color : colorMap.keySet()){
+            if(colorMap.get(color) > max){
+                bestColor = color;
+                max = colorMap.get(color);
+            }    
+        }
+
+        //Add occurance count onto the end
+        bestColor.add(max);
+
+        //Max found. Convert back to array
+
+        return Utility.listToArray(bestColor);
+    }
+
+    public static List<Integer> arrayToList(int[] nums){
+        List<Integer> l = new ArrayList<>();
+
+        for(int i = 0; i < nums.length; i++){
+            l.add(nums[i]);
+        }
+
+        return l;
+    }
+
+    public static int[] listToArray(List<Integer> l){
+        int[] array = new int[l.size()];
+
+        for(int i = 0; i < l.size(); i++){
+            array[i] = l.get(i);
+        }
+
+        return array;
+    }
+
+    public static int[][][] isolateChannel(int[][][] imgData, int channel){
+        int rows = imgData.length;
+        int cols = imgData[0].length;
+
+        int[][][] ret = new int[rows][cols][1];
+
+        for(int r = 0; r < rows; r++){
+            for(int c = 0; c < cols; c++){
+                ret[r][c][0] = imgData[r][c][channel];
+            }
+        }
+
+        return ret;
+    }
+
+    public static int getRandomInteger(int lowerBound, int upperBound){
+        int delta = upperBound - lowerBound;
+
+        return lowerBound + (int)(Math.random() * delta);
+    }
+
+    public static int[] getRandomArray(int size, int lowerBound, int upperBound){
+        int[] r = new int[size];
+
+        for(int i = 0; i < r.length; i++){
+            r[i] = Utility.getRandomInteger(lowerBound, upperBound);
+        }
+        return r;
+    }
+
+    public static void populateArrayRandom(int[] array, int lowerBound, int upperBound){
+        for(int i = 0; i < array.length; i++){
+            array[i] = Utility.getRandomInteger(lowerBound, upperBound);
+        }
+    }
+
+    public static void populateArrayRandom(int[][] array, int lowerBound, int upperBound){
+        for(int i = 0; i < array.length; i++){
+            for(int j = 0; j < array[i].length; j++){
+                array[i][j] = Utility.getRandomInteger(lowerBound, upperBound);
+            }
+        }
+    }
+
+    public static void populateArrayRandom(int[][][] array, int lowerBound, int upperBound){
+        for(int i = 0; i < array.length; i++){
+            for(int j = 0; j < array[i].length; j++){
+                for(int k = 0; k < array[i][j].length; k++){
+                    array[i][j][k] = Utility.getRandomInteger(lowerBound, upperBound);
+                }
+            }
+        }
+    }
+
+    public static boolean isEqual(int[] a, int[] b){
+        if(a == null && b == null){
+            return true;
+        }
+
+        if((a == null && b != null) || (a != null && b == null)){
+            return false;
+        }
+
+        if(a.length != b.length){
+            return false;
+        }
+
+        for(int i = 0; i < a.length; i++){
+            if(a[i] != b[i]){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean isEqual(int[][] a, int[][] b){
+
+        for(int i = 0; i < a.length; i++){
+            if(!isEqual(a[i], b[i])){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean isEqual(int[][][] a, int[][][] b){
+
+        for(int i = 0; i < a.length; i++){
+            if(!isEqual(a[i], b[i])){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static int[] duplicateArray(int[] a){
+        int[] r = new int[a.length];
+
+        for(int i = 0; i < r.length; i++){
+            r[i] = a[i];
+        }
+
+        return r;
+    }
+
+    public static int[][] duplicateArray(int[][] a){
+        int[][] r = new int[a.length][];
+
+        for(int i = 0; i < a.length; i++){
+            r[i] = Utility.duplicateArray(a[i]);
+        }
+
+        return r;
+    }
+
+    public static int[][][] duplicateArray(int[][][] a){
+        int[][][] r = new int[a.length][][];
+
+        for(int i = 0; i < a.length; i++){
+            r[i] = Utility.duplicateArray(a[i]);
+        }
+
+        return r;
+    }
+
+
+}
