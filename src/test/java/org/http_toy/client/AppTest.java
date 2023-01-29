@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import org.http_toy.Utility;
 
+import java.util.Arrays;
 /**
  * Unit test for simple App.
  */
@@ -36,7 +37,7 @@ public class AppTest
     }
 
     @Test
-    public void testbinaryStringTo(){
+    public void testbinaryStringToInteger1(){
         //Create a simple binary string
         //00001001 binary is 9 decimal
         String s = "00001001";
@@ -123,4 +124,71 @@ public class AppTest
 
         assertTrue(output.equals(answer));
     }
+
+    @Test
+    public void testintegerToBinaryString1(){
+        int input = 0;
+
+        String answer = "0000";
+
+        String output = Utility.integerToBinaryString(input);
+
+        assertTrue(output.equals(answer));
+    }
+
+    @Test
+    public void testintegerToBinaryString2(){
+        int input = 2;
+
+        String answer = "0010";
+
+        String output = Utility.integerToBinaryString(input);
+
+        assertTrue(output.equals(answer));
+    }
+
+    @Test
+    public void testintegerToBinaryString3(){
+        int input = 15;
+
+        String answer = "1111";
+
+        String output = Utility.integerToBinaryString(input);
+
+        assertTrue(output.equals(answer));
+    }
+
+    @Test
+    public void testgetMostCommonColor1(){
+
+        //Array of all zeros, most common "color" is [0,0,0]
+        int[][][] input = new int[10][10][3];
+
+        int[] answer = new int[]{0,0,0,100};
+
+        int[] output = Utility.getMostCommonColor(input);
+
+        assertTrue(Utility.isEqual(answer, output));
+    }
+
+    @Test
+    public void testgetMostCommonColor2(){
+
+        int[][][] input = new int[10][10][3];
+
+        Utility.populateArray(input, 2);
+
+        int[] answer = new int[]{2,2,2, 100};
+
+        int[] output = Utility.getMostCommonColor(input);
+
+        assertTrue(Utility.isEqual(answer, output));
+    }
+
+    @Test
+    public void testArrayToList1(){
+        //Todo: write this
+    }
+
+
 }

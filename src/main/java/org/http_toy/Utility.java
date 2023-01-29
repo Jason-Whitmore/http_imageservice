@@ -334,6 +334,30 @@ public class Utility {
         return r;
     }
 
+    public static void populateArray(int[] array, int num){
+
+        for(int i = 0; i < array.length; i++){
+            array[i] = num;
+        }
+
+    }
+
+    public static void populateArray(int[][] array, int num){
+
+        for(int i = 0; i < array.length; i++){
+            Utility.populateArray(array[i], num);
+        }
+
+    }
+
+    public static void populateArray(int[][][] array, int num){
+
+        for(int i = 0; i < array.length; i++){
+            Utility.populateArray(array[i], num);
+        }
+
+    }
+
     public static void populateArrayRandom(int[] array, int lowerBound, int upperBound){
         for(int i = 0; i < array.length; i++){
             array[i] = Utility.getRandomInteger(lowerBound, upperBound);
