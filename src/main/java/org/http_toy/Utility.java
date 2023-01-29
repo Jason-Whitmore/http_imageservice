@@ -146,16 +146,17 @@ public class Utility {
 
 
     public static String integerToBinaryString(int num){
-        char[] c = new char[8];
+
+        int numBits = 4;
+        char[] c = new char[numBits];
 
         //Initial population
         for(int i = 0; i < c.length; i++){
             c[i] = '0';
         }
 
-        //todo: issue with temp. should not be at 0
         int temp = num;
-        int index = 0;
+        int index = c.length - 1;
 
         while(temp > 0){
             if(temp % 2 == 0){
@@ -165,7 +166,7 @@ public class Utility {
             }
 
             temp /= 2;
-            index++;
+            index--;
         }
         
         
@@ -194,10 +195,14 @@ public class Utility {
     public static String binaryStringToHexString(String binaryString){
         StringBuilder sb = new StringBuilder();
 
-        for(int i = 0; i < binaryString.length(); i+=4){
-            String nibble = binaryString.substring(i, i + 4);
+        int numBits = 4;
 
-            int num = Utility.binaryStringToInteger(nibble);
+        for(int i = 0; i < binaryString.length(); i+=numBits){
+
+            //Isolate nibble
+            String segment = binaryString.substring(i, i + numBits);
+
+            int num = Utility.binaryStringToInteger(segment);
 
             char hex = Utility.integerToHex(num);
 

@@ -103,9 +103,9 @@ public class AppTest
     @Test
     public void testbinaryStringToHexString1(){
         //Should convert to fa
-        String s = "11111010";
+        String s = "0000111100001010";
 
-        String answer = "fa";
+        String answer = "0f0a";
 
         String output = Utility.binaryStringToHexString(s);
 
@@ -115,13 +115,11 @@ public class AppTest
     @Test
     public void testhexStringToBinaryString1(){
         //Binary string should convert to 11111010
-        String s = "fa";
+        String s = "0f0a";
 
-        String answer = "11111010";
+        String answer = "0000111100001010";
 
         String output = Utility.hexStringToBinaryString(s);
-
-        System.out.println(output);
 
         assertTrue(output.equals(answer));
     }
