@@ -462,12 +462,12 @@ public class Utility {
         return r;
     }
 
-    public int[] getSubarray(int[] array, int start, int end){
+    public static int[] getSubarray(int[] array, int start, int end){
         int n = end - start + 1;
 
         int[] r = new int[n];
 
-        for(int i = start; i < r.length; i++){
+        for(int i = start; i - start < r.length; i++){
             r[i - start] = array[i];
         }
 

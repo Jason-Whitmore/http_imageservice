@@ -258,5 +258,14 @@ public class AppTest
         assertTrue(Utility.isEqual(answer, output));
     }
 
+    @Test
+    public void testgetSubarray1(){
+        int[] input = new int[]{0,1,2,3};
 
+        int[] answer = new int[]{1,2};
+
+        int[] output = Utility.getSubarray(input, 1, 2);
+
+        assertTrue(Utility.isEqual(answer, output));
+    }
 }
