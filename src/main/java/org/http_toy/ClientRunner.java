@@ -31,6 +31,8 @@ public class ClientRunner
         //help does not require any input
 
         
+        System.out.println("Args length: " + args.length);
+
 
         if(args.length == 1){
             //Could be help
@@ -39,10 +41,10 @@ public class ClientRunner
             }
         } else if(args.length == 2){
 
-
+            
         } else if(args.length == 3){
             //Could be gray, red, blue, green
-
+            
             //Could be stats
             if(args[0].equals("stats")){
                 String imagePath = args[1];
@@ -130,9 +132,9 @@ public class ClientRunner
             //Send to server, recieve response.
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
+            //System.out.println("Response code: " + response.statusCode());
 
-            String responseString = "" + response.toString();
-            
+            String responseString = "" + response.body();            
             
 
             //Replace the string start message

@@ -7,6 +7,9 @@ import org.junit.Test;
 import org.http_toy.Utility;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * Unit test for simple App.
  */
@@ -131,7 +134,7 @@ public class AppTest
 
         String answer = "0000";
 
-        String output = Utility.integerToBinaryString(input);
+        String output = Utility.integerToBinaryString(input, 4);
 
         assertTrue(output.equals(answer));
     }
@@ -142,7 +145,7 @@ public class AppTest
 
         String answer = "0010";
 
-        String output = Utility.integerToBinaryString(input);
+        String output = Utility.integerToBinaryString(input, 4);
 
         assertTrue(output.equals(answer));
     }
@@ -153,7 +156,18 @@ public class AppTest
 
         String answer = "1111";
 
-        String output = Utility.integerToBinaryString(input);
+        String output = Utility.integerToBinaryString(input, 4);
+
+        assertTrue(output.equals(answer));
+    }
+
+    @Test
+    public void testintegerToBinaryString4(){
+        int input = 255;
+
+        String answer = "11111111";
+
+        String output = Utility.integerToBinaryString(input, 8);
 
         assertTrue(output.equals(answer));
     }
@@ -186,8 +200,62 @@ public class AppTest
     }
 
     @Test
-    public void testArrayToList1(){
-        //Todo: write this
+    public void testarrayToList1(){
+        int[] input = new int[]{1,2,3,4};
+
+        List<Integer> answer = new ArrayList<>();
+        answer.add(1);
+        answer.add(2);
+        answer.add(3);
+        answer.add(4);
+
+        List<Integer> output = Utility.arrayToList(input);
+
+        assertTrue(answer.equals(output));
+    }
+
+
+    @Test
+    public void testlistToArray1(){
+        List<Integer> input = new ArrayList<>();
+        input.add(5);
+        input.add(4);
+        input.add(3);
+
+        int[] answer = new int[]{5, 4, 3};
+
+        int[] output = Utility.listToArray(input);
+
+        assertTrue(Utility.isEqual(answer, output));
+    }
+
+    @Test
+    public void testisolateChannel1(){
+        int[][][] input = new int[10][10][3];
+        Utility.populateArray(input, 2);
+
+        int[][][] answer = new int[10][10][1];
+        Utility.populateArray(answer, 2);
+
+        int[][][] output = Utility.isolateChannel(input, 0);
+
+        assertTrue(Utility.isEqual(answer, output));
+
+    }
+
+    @Test
+    public void testisolateChannel2(){
+        int[][][] input = new int[1][1][3];
+        input[0][0][0] = 0;
+        input[0][0][1] = 1;
+        input[0][0][2] = 2;
+
+        int[][][] answer = new int[1][1][1];
+        answer[0][0][0] = 1;
+
+        int[][][] output = Utility.isolateChannel(input, 1);
+
+        assertTrue(Utility.isEqual(answer, output));
     }
 
 

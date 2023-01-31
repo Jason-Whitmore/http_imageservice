@@ -31,7 +31,7 @@ public class Utility {
 
 
     public static String imageDataToHexString(int[][][] imageData){
-        int[] flatImageData = Utility.flatten(imageData);
+        int[] flatImageData = Utility.imageToFlatImage(imageData);
 
         String binaryStringData = Utility.integerArrayToBinaryString(flatImageData);
 
@@ -54,7 +54,9 @@ public class Utility {
         StringBuilder sb = new StringBuilder();
 
         for(int i = 0; i < array.length; i++){
-            sb.append(Utility.integerToBinaryString(array[i]));
+            
+            //Using 8 bits for integers in range [0, 255]
+            sb.append(Utility.integerToBinaryString(array[i], 8));
         }
         return sb.toString();
     }
@@ -136,7 +138,8 @@ public class Utility {
 
             int number = Utility.hexToInteger(hexDigit);
 
-            String binary = Utility.integerToBinaryString(number);
+            //Using 4 bits for integers in range[0, 15]
+            String binary = Utility.integerToBinaryString(number, 4);
 
             sb.append(binary);
         }
@@ -145,10 +148,9 @@ public class Utility {
     }
 
 
-    public static String integerToBinaryString(int num){
+    public static String integerToBinaryString(int num, int bits){
 
-        int numBits = 4;
-        char[] c = new char[numBits];
+        char[] c = new char[bits];
 
         //Initial population
         for(int i = 0; i < c.length; i++){
@@ -159,6 +161,10 @@ public class Utility {
         int index = c.length - 1;
 
         while(temp > 0){
+            if(index < 0){
+                System.err.println("Bad index. num = " + num);
+            }
+
             if(temp % 2 == 0){
                 c[index] = '0';
             } else {
@@ -451,6 +457,18 @@ public class Utility {
 
         for(int i = 0; i < a.length; i++){
             r[i] = Utility.duplicateArray(a[i]);
+        }
+
+        return r;
+    }
+
+    public int[] getSubarray(int[] array, int start, int end){
+        int n = end - start + 1;
+
+        int[] r = new int[n];
+
+        for(int i = start; i < r.length; i++){
+            r[i - start] = array[i];
         }
 
         return r;

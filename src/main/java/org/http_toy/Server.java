@@ -20,7 +20,7 @@ public class Server {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("[String]Image statistics:\n");
+        sb.append("[STRING]Image statistics:\n");
 
         int[][][] imgData = Utility.hexStringToImageData(imgDataString);
         
