@@ -33,19 +33,54 @@ public class Utility {
     public static String imageDataToHexString(int[][][] imageData){
         int[] flatImageData = Utility.imageToFlatImage(imageData);
 
-        String binaryStringData = Utility.integerArrayToBinaryString(flatImageData);
+        StringBuilder sb = new StringBuilder();
 
-        String hexStringData = Utility.binaryStringToHexString(binaryStringData);
+        int rows = flatImageData[0];
+        String rowsBinary = Utility.integerToBinaryString(rows, 32);
+        String rowsHex = Utility.binaryStringToHexString(rowsBinary);
+        sb.append(rowsHex);
 
-        return hexStringData;
+        int cols = flatImageData[1];
+        String colsBinary = Utility.integerToBinaryString(cols, 32);
+        String colsHex = Utility.binaryStringToHexString(colsBinary);
+        sb.append(colsHex);
+
+
+        int channels = flatImageData[2];
+        String channelsBinary = Utility.integerToBinaryString(channels, 32);
+        String channelsHex = Utility.binaryStringToHexString(channelsBinary);
+        sb.append(channelsHex);
+
+        int[] pixelData = Utility.getSubarray(flatImageData, 3, flatImageData.length - 1);
+
+
+
+        String binaryStringPixelData = Utility.integerArrayToBinaryString(pixelData);
+
+        String hexStringPixelData = Utility.binaryStringToHexString(binaryStringPixelData);
+
+        sb.append(hexStringPixelData);
+
+        return sb.toString();
     }
 
     public static int[][][] hexStringToImageData(String hexString){
         String binaryString = Utility.hexStringToBinaryString(hexString);
 
+        String rowString = binaryString.substring(0, 32);
+        int rows = Utility.binaryStringToInteger(rowString);
+
+        String colString = binaryString.substring(32, 64);
+        int cols = Utility.binaryStringToInteger(colString);
+
+        String channelString = binaryString.substring(64, 96);
+        int channels = Utility.binaryStringToInteger(channelString);
+
+        binaryString = binaryString.substring(96);
+
         int[] flatImage = Utility.binaryStringToIntegerArray(binaryString);
 
-        int[][][] image = Utility.flatImageToImage(flatImage);
+        int[][][] image = Utility.flatImageToImage(flatImage, rows, cols, channels);
 
         return image;
     }
@@ -73,13 +108,10 @@ public class Utility {
         return array;
     }
 
-    public static int[][][] flatImageToImage(int[] flatImage){
-        int rows = flatImage[0];
-        int cols = flatImage[1];
-        int channels = flatImage[2];
+    public static int[][][] flatImageToImage(int[] flatImage, int rows, int cols, int channels){
 
         int[][][] image = new int[rows][cols][channels];
-        int index = 3;
+        int index = 0;
 
         for(int r = 0; r < rows; r++){
             for(int c = 0; c < cols; c++){

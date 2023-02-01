@@ -25,18 +25,15 @@ public class AppTest
     }
 
     @Test
-    public void testFlattenImageMethods(){
-        int[][][] image = new int[100][150][3];
-        Utility.populateArrayRandom(image, 0, 255);
+    public void testImageSavingMethods(){
+        int[][][] img = new int[500][150][3];
+        Utility.populateArrayRandom(img, 0, 255);
 
-        int[][][] imageCopy = Utility.duplicateArray(image);
+        String imgHexString = Utility.imageDataToHexString(img);
 
-        int[] flatImage = Utility.imageToFlatImage(imageCopy);
-        
-        //convert back into image
-        int[][][] newImage = Utility.flatImageToImage(flatImage);
+        int[][][] imgReconstructed = Utility.hexStringToImageData(imgHexString);
 
-        assertTrue(Utility.isEqual(image, newImage));
+        assertTrue(Utility.isEqual(img, imgReconstructed));
     }
 
     @Test
