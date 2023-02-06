@@ -183,6 +183,21 @@ public class AppTest
     }
 
     @Test
+    public void testgetMeanColor1(){
+        int[][][] imgData = new int[3][1][1];
+
+        imgData[0][0][0] = 1;
+        imgData[1][0][0] = 2;
+        imgData[2][0][0] = 3;
+
+        int[] answer = new int[]{2};
+
+        int[] output = Utility.getMeanColor(imgData);
+
+        assertTrue(Utility.isEqual(output, answer));
+    }
+
+    @Test
     public void testgetMostCommonColor2(){
 
         int[][][] input = new int[10][10][3];

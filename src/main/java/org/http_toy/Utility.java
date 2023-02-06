@@ -337,7 +337,7 @@ public class Utility {
         for(int r = 0; r < imgData.length; r++){
             for(int c = 0; c < imgData[r].length; c++){
                 for(int ch = 0; ch < imgData[r][c].length; ch++){
-                    channelSums[i].add(new BigInteger("" + imgData[r][c][ch]));
+                    channelSums[ch] = channelSums[ch].add(BigInteger.valueOf(imgData[r][c][ch]));
                 }
             }
         }
@@ -348,7 +348,7 @@ public class Utility {
         int denominator = imgData.length * imgData[0].length;
 
         for(int i = 0; i < r.length; i++){
-            r[i] = channelSums[i].divide(new BigInteger("" + denominator));
+            r[i] = (channelSums[i].divide(BigInteger.valueOf(denominator))).intValue();
         }
 
         return r;
