@@ -22,6 +22,8 @@ public class Server {
 
         sb.append("[STRING]Image statistics:\n");
 
+        //Display image dimensions
+
         int[][][] imgData = Utility.hexStringToImageData(imgDataString);
         
         int rows = imgData.length;
@@ -29,6 +31,13 @@ public class Server {
 
         int cols = imgData[0].length;
         sb.append("Number of columns: " + cols + "\n");
+
+        int channels = imgData[0][0].length;
+        sb.append("Number of channels: " + channels + "\n");
+
+
+        //Display color mode
+
 
         int[] mostCommonColor = Utility.getMostCommonColor(imgData);
 
@@ -38,7 +47,18 @@ public class Server {
             sb.append("Channel " + i + ": " + mostCommonColor[i] + "\n");
         }
 
-        sb.append("Occurences: " + mostCommonColor[mostCommonColor.length - 1] + "\n");
+        sb.append("Occurences: " + mostCommonColor[mostCommonColor.length - 1] + "\n\n");
+
+
+        //Display color mean
+
+        int[] meanColor = Utility.getMeanColor(imgData);
+
+        sb.append("Mean color:\n");
+
+        for(int i = 0; i < meanColor.length; i++){
+            sb.append("Channel " + i + ": " + meanColor[i] + "\n");
+        }
 
         return sb.toString();
     }

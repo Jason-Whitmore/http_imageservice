@@ -91,19 +91,21 @@ public class ClientRunner
 
         int[][][] imageData = new int[rows][cols][channels];
 
+        //Todo: issue somewhere here. imageData[r][c] contains all of the same numbers, unintentional grayscale?
+
+
         for(int r = 0; r < rows; r++){
             for(int c = 0; c < cols; c++){
                 int rgb = image.getRGB(c, r);
 
                 //set red
-                imageData[r][c][0] = rgb & 0x77;
+                imageData[r][c][0] = rgb & 0xff;
 
                 //set blue
-                imageData[r][c][1] = rgb & 0x0077;
+                imageData[r][c][1] = (rgb & 0xff00) >> 8;
 
                 //set green
-                imageData[r][c][2] = rgb & 0x000077;
-                
+                imageData[r][c][2] = (rgb & 0xff0000) >> 16;
             }
         }
         
@@ -140,7 +142,7 @@ public class ClientRunner
             //Replace the string start message
             responseString = responseString.replace("[STRING]", "");
 
-            System.out.println("Response body: " + responseString);
+            System.out.println(responseString);
 
         } catch(IOException e){
             System.err.println("IOException caught: " + e.toString());

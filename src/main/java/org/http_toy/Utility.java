@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
+import java.math.BigInteger;
+
 public class Utility {
     
 
@@ -294,6 +296,7 @@ public class Utility {
             for(int c = 0; c < imgData[r].length; c++){
                 List<Integer> colors = Utility.arrayToList(imgData[r][c]);
 
+
                 //Add to map or increment
                 if(colorMap.containsKey(colors)){
                     colorMap.put(colors, colorMap.get(colors) + 1);
@@ -320,6 +323,35 @@ public class Utility {
         //Max found. Convert back to array
 
         return Utility.listToArray(bestColor);
+    }
+
+    public static int[] getMeanColor(int[][][] imgData){
+        int channels = imgData[0][0].length;
+
+        BigInteger[] channelSums = new BigInteger[channels];
+
+        for(int i = 0; i < channelSums.length; i++){
+            channelSums[i] = BigInteger.ZERO;
+        }
+
+        for(int r = 0; r < imgData.length; r++){
+            for(int c = 0; c < imgData[r].length; c++){
+                for(int ch = 0; ch < imgData[r][c].length; ch++){
+                    channelSums[i].add(new BigInteger("" + imgData[r][c][ch]));
+                }
+            }
+        }
+
+        //Place results into return array
+        int[] r = new int[channels];
+
+        int denominator = imgData.length * imgData[0].length;
+
+        for(int i = 0; i < r.length; i++){
+            r[i] = channelSums[i].divide(new BigInteger("" + denominator));
+        }
+
+        return r;
     }
 
     public static List<Integer> arrayToList(int[] nums){
