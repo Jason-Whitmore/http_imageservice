@@ -61,15 +61,35 @@ public class ClientRunner
 
             if(args[0].equals("gray") || args[0].equals("grey")){
                 //handle grey
+                String imagePath = args[1];
+                String address = args[2];
+                String greyImagePath = args[3];
+
+                ClientRunner.handleGrey(imagePath, serverAddress, greyImagePath);
 
             } else if(args[0].equals("red")){
                 //handle red
+                String imagePath = args[1];
+                String address = args[2];
+                String redImagePath = args[3];
+
+                ClientRunner.handleRed(imagePath, serverAddress, redImagePath);
 
             } else if(args[0].equals("blue")){
                 //handle blue
+                String imagePath = args[1];
+                String address = args[2];
+                String blueImagePath = args[3];
+
+                ClientRunner.handleBlue(imagePath, serverAddress, blueImagePath);
 
             } else if(args[0].equals("green")){
                 //handle green
+                String imagePath = args[1];
+                String address = args[2];
+                String greenImagePath = args[3];
+
+                ClientRunner.handleGreen(imagePath, serverAddress, greenImagePath);
 
             }
 
@@ -129,6 +149,22 @@ public class ClientRunner
         
 
         return imageData;
+    }
+
+    private static void handleGrey(String imagePath, String serverAddress, String greyImagePath){
+
+    }
+
+    private static void handleRed(String imagePath, String serverAddress, String redImagePath){
+
+    }
+
+    private static void handleGreen(String imagePath, String serverAddress, String greenImagePath){
+
+    }
+
+    private static void handleBlue(String imagePath, String serverAddress, String blueImagePath){
+
     }
 
     private static void handleStats(String imagePath, String serverAddress){
