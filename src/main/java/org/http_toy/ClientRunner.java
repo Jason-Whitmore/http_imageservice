@@ -43,7 +43,8 @@ public class ClientRunner
 
             
         } else if(args.length == 3){
-            //Could be gray, red, blue, green
+            
+            
             
             //Could be stats
             if(args[0].equals("stats")){
@@ -53,6 +54,23 @@ public class ClientRunner
                 System.out.println("Image path: " + imagePath);
 
                 ClientRunner.handleStats(imagePath, address);
+            }
+
+        } else if(args.length == 4){
+            //Could be gray, red, blue, green
+
+            if(args[0].equals("gray") || args[0].equals("grey")){
+                //handle grey
+
+            } else if(args[0].equals("red")){
+                //handle red
+
+            } else if(args[0].equals("blue")){
+                //handle blue
+
+            } else if(args[0].equals("green")){
+                //handle green
+
             }
 
         } else {
