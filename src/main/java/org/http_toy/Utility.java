@@ -7,6 +7,12 @@ import java.util.List;
 import java.util.ArrayList;
 
 import java.math.BigInteger;
+import java.awt.color.ColorSpace;
+import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 
 public class Utility {
     
@@ -539,6 +545,25 @@ public class Utility {
     }
 
     public static void saveImageToDisk(int[][][] imageData, String filePath){
+        int numRows = imageData.length;
+        int numCols = imageData[0].length;
+        int numChannels = imageData[0][0].length;
+
+        BufferedImage bi = new BufferedImage(numCols, numRows, ColorSpace.TYPE_RGB);
+
+        for(int r = 0; r < numRows; r++){
+            for(int c = 0; c < numCols; c++){
+
+                //Todo: create color and apply it to buffered image pixel
+                int color = 0;
+
+                bi.setRGB(c, r, color);
+            }
+        }
+
+        //Todo: save buffered image to file
+
+        File f = new File(filePath);
 
     }
 

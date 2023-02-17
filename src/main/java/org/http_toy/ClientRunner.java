@@ -65,7 +65,7 @@ public class ClientRunner
                 String address = args[2];
                 String greyImagePath = args[3];
 
-                ClientRunner.handleGrey(imagePath, serverAddress, greyImagePath);
+                ClientRunner.handleGrey(imagePath, address, greyImagePath);
 
             } else if(args[0].equals("red")){
                 //handle red
@@ -73,7 +73,7 @@ public class ClientRunner
                 String address = args[2];
                 String redImagePath = args[3];
 
-                ClientRunner.handleRed(imagePath, serverAddress, redImagePath);
+                ClientRunner.handleRed(imagePath, address, redImagePath);
 
             } else if(args[0].equals("blue")){
                 //handle blue
@@ -81,7 +81,7 @@ public class ClientRunner
                 String address = args[2];
                 String blueImagePath = args[3];
 
-                ClientRunner.handleBlue(imagePath, serverAddress, blueImagePath);
+                ClientRunner.handleBlue(imagePath, address, blueImagePath);
 
             } else if(args[0].equals("green")){
                 //handle green
@@ -89,7 +89,7 @@ public class ClientRunner
                 String address = args[2];
                 String greenImagePath = args[3];
 
-                ClientRunner.handleGreen(imagePath, serverAddress, greenImagePath);
+                ClientRunner.handleGreen(imagePath, address, greenImagePath);
 
             }
 
