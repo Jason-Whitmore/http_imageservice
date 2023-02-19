@@ -99,60 +99,9 @@ public class ClientRunner
         }
     }
 
-    private static int[][][] imagePathToImageData(String imagePath){
-
-        BufferedImage image = null;
-        try{
-
-            File f = new File(imagePath);
-
-            image = ImageIO.read(f);
-
-        } catch (javax.imageio.IIOException e){
-            System.err.println(e.toString());
-            return null;
-        } catch(Exception e){
-            System.err.println(e.toString());
-            return null;
-        }
-
-        
-
-        int rows = image.getHeight();
-        int cols = image.getWidth();
-        int channels = image.getColorModel().getColorSpace().getNumComponents();
-
-        if(channels != 3){
-            System.err.println("Input image must have three channels");
-            return null;
-        }
-
-        int[][][] imageData = new int[rows][cols][channels];
-
-        //Todo: issue somewhere here. imageData[r][c] contains all of the same numbers, unintentional grayscale?
-
-
-        for(int r = 0; r < rows; r++){
-            for(int c = 0; c < cols; c++){
-                int rgb = image.getRGB(c, r);
-
-                //set red
-                imageData[r][c][0] = rgb & 0xff;
-
-                //set blue
-                imageData[r][c][1] = (rgb & 0xff00) >> 8;
-
-                //set green
-                imageData[r][c][2] = (rgb & 0xff0000) >> 16;
-            }
-        }
-        
-
-        return imageData;
-    }
 
     private static void handleGrey(String imagePath, String serverAddress, String greyImagePath){
-        int[][][] imageData = ClientRunner.imagePathToImageData(imagePath);
+        int[][][] imageData = Utility.loadImageFromDisk(imagePath);
 
         //Convert imageData into a hex string.
         String hexImageData = Utility.imageDataToHexString(imageData);
@@ -188,7 +137,7 @@ public class ClientRunner
     }
 
     private static void handleRed(String imagePath, String serverAddress, String redImagePath){
-        int[][][] imageData = ClientRunner.imagePathToImageData(imagePath);
+        int[][][] imageData = Utility.loadImageFromDisk(imagePath);
 
         //Convert imageData into a hex string.
         String hexImageData = Utility.imageDataToHexString(imageData);
@@ -224,7 +173,7 @@ public class ClientRunner
     }
 
     private static void handleGreen(String imagePath, String serverAddress, String greenImagePath){
-        int[][][] imageData = ClientRunner.imagePathToImageData(imagePath);
+        int[][][] imageData = Utility.loadImageFromDisk(imagePath);
 
         //Convert imageData into a hex string.
         String hexImageData = Utility.imageDataToHexString(imageData);
@@ -260,7 +209,7 @@ public class ClientRunner
     }
 
     private static void handleBlue(String imagePath, String serverAddress, String blueImagePath){
-        int[][][] imageData = ClientRunner.imagePathToImageData(imagePath);
+        int[][][] imageData = Utility.loadImageFromDisk(imagePath);
 
         //Convert imageData into a hex string.
         String hexImageData = Utility.imageDataToHexString(imageData);
@@ -296,7 +245,7 @@ public class ClientRunner
     }
 
     private static void handleStats(String imagePath, String serverAddress){
-        int[][][] imageData = ClientRunner.imagePathToImageData(imagePath);
+        int[][][] imageData = Utility.loadImageFromDisk(imagePath);
 
         //Convert imageData into a hex string.
         String hexImageData = Utility.imageDataToHexString(imageData);
