@@ -72,7 +72,9 @@ public class Utility {
     }
 
     public static int[][][] hexStringToImageData(String hexString){
+
         String binaryString = Utility.hexStringToBinaryString(hexString);
+        
 
         String rowString = binaryString.substring(0, 32);
         int rows = Utility.binaryStringToInteger(rowString);
@@ -175,6 +177,7 @@ public class Utility {
         for(int i = 0; i < hexString.length(); i++){
             char hexDigit = hexString.charAt(i);
 
+
             int number = Utility.hexToInteger(hexDigit);
 
             //Using 4 bits for integers in range[0, 15]
@@ -201,7 +204,7 @@ public class Utility {
 
         while(temp > 0){
             if(index < 0){
-                System.err.println("Bad index. num = " + num);
+                System.err.println("Bad index. num = " + num + ", bits = " + bits);
             }
 
             if(temp % 2 == 0){
@@ -572,21 +575,19 @@ public class Utility {
 
         int[][][] imageData = new int[rows][cols][channels];
 
-        //Todo: issue somewhere here. imageData[r][c] contains all of the same numbers, unintentional grayscale?
-
 
         for(int r = 0; r < rows; r++){
             for(int c = 0; c < cols; c++){
                 int rgb = image.getRGB(c, r);
 
                 //set red
-                imageData[r][c][0] = rgb & 0xff;
-
-                //set blue
-                imageData[r][c][1] = (rgb & 0xff00) >> 8;
+                imageData[r][c][0] = (rgb & 0xff0000) >> 16;
 
                 //set green
-                imageData[r][c][2] = (rgb & 0xff0000) >> 16;
+                imageData[r][c][1] = (rgb & 0x00ff00) >> 8;
+
+                //set blue
+                imageData[r][c][2] = (rgb & 0x0000ff);
             }
         }
         
@@ -597,18 +598,29 @@ public class Utility {
     public static void saveImageToDisk(int[][][] imageData, String filePath){
         int numRows = imageData.length;
         int numCols = imageData[0].length;
+        int numChannels = imageData[0][0].length;
 
         BufferedImage bi = new BufferedImage(numCols, numRows, ColorSpace.TYPE_RGB);
 
         for(int r = 0; r < numRows; r++){
             for(int c = 0; c < numCols; c++){
+
                 int color = imageData[r][c][0];
 
-                color <<= 8;
-                color += imageData[r][c][1];
+                if(numChannels == 3){
+                    color <<= 8;
+                    color += imageData[r][c][1];
 
-                color <<= 8;
-                color += imageData[r][c][2];
+                    color <<= 8;
+                    color += imageData[r][c][2];
+                } else {
+                    color <<= 8;
+                    color += imageData[r][c][0];
+
+                    color <<= 8;
+                    color += imageData[r][c][0];
+                }
+                
 
                 bi.setRGB(c, r, color);
             }
@@ -617,7 +629,11 @@ public class Utility {
         try{
             File f = new File(filePath);
 
-            ImageIO.write(bi, filePath, f);
+            String fileType = filePath.substring(filePath.indexOf(".") + 1);
+
+            System.out.println("File type: " + fileType);
+
+            ImageIO.write(bi, fileType, f);
         } catch(IOException e){
             System.err.println("Exception occured when trying to save image to file in Utility.saveImageToDisk()");
             System.err.println(e.toString());

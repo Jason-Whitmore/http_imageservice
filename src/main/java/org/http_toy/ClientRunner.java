@@ -1,13 +1,5 @@
 package org.http_toy;
 
-
-
-import java.awt.image.BufferedImage;
-
-import javax.imageio.ImageIO;
-
-
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -209,10 +201,15 @@ public class ClientRunner
     }
 
     private static void handleBlue(String imagePath, String serverAddress, String blueImagePath){
+
+        
         int[][][] imageData = Utility.loadImageFromDisk(imagePath);
+        
 
         //Convert imageData into a hex string.
         String hexImageData = Utility.imageDataToHexString(imageData);
+
+        
 
         //Create the http client
         HttpClient client = HttpClient.newHttpClient();
@@ -228,6 +225,8 @@ public class ClientRunner
 
 
             String responseString = response.body();
+
+            responseString = responseString.replace("[Image]", "");
             
             int[][][] blueImageData = Utility.hexStringToImageData(responseString);
 
@@ -265,9 +264,7 @@ public class ClientRunner
             //Send to server, recieve response.
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
-            //System.out.println("Response code: " + response.statusCode());
-
-            String responseString = "" + response.body();            
+            String responseString = "" + response.body();
             
 
             //Replace the string start message

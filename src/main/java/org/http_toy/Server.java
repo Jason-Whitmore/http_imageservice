@@ -96,8 +96,8 @@ public class Server {
         return "[Image]" + greenImgDataString;
     }
 
-    @GetMapping("/blue/{imgDataString}")
-    private String getBlueChannels(@PathVariable String imgDataString){
+    @PostMapping("/blue/")
+    private String getBlueChannels(@RequestBody String imgDataString){
         int[][][] imgData = Utility.hexStringToImageData(imgDataString);
 
         int[][][] blueImgData = Utility.isolateChannel(imgData, 2);
