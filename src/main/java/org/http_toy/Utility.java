@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import java.math.BigInteger;
+import java.net.http.HttpHeaders;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -662,6 +663,70 @@ public class Utility {
         }
 
         return byteArray;
+    }
+
+    public static int[] getImageDimensions(HttpHeaders headers){
+        int numRows = -1;
+        int numCols = -1;
+        int numChannels = -1;
+
+        if(headers.firstValue("num_rows") != null && !headers.firstValue("num_rows").isEmpty() && !headers.firstValue("num_rows").isPresent()){
+            numRows = Integer.parseInt(headers.firstValue("num_rows").get());
+        }
+
+        if(headers.firstValue("num_cols") != null && !headers.firstValue("num_cols").isEmpty() && !headers.firstValue("num_cols").isPresent()){
+            numCols = Integer.parseInt(headers.firstValue("num_cols").get());
+        }
+
+        if(headers.firstValue("num_channels") != null && !headers.firstValue("num_channels").isEmpty() && !headers.firstValue("num_channels").isPresent()){
+            numChannels = Integer.parseInt(headers.firstValue("num_channels").get());
+        }
+
+        if(numRows == -1 || numCols == -1 || numChannels == -1){
+            return null; 
+        }
+
+        int[] r = new int[3];
+
+        r[0] = numRows;
+        r[1] = numCols;
+        r[2] = numChannels;
+
+        return r;
+    }
+
+    public static int[] getImageDimensions(Map<String, String> map){
+        int numRows = -1;
+        int numCols = -1;
+        int numChannels = -1;
+        if(map == null){
+            return null;
+        }
+
+
+        if(map.containsKey("num_rows")){
+            numRows = Integer.parseInt(map.get("num_rows"));
+        }
+
+        if(map.containsKey("num_cols")){
+            numCols = Integer.parseInt(map.get("num_cols"));
+        }
+
+        if(map.containsKey("num_channels")){
+            numChannels = Integer.parseInt(map.get("num_channels"));
+        }
+
+        if(numRows == -1 || numCols == -1 || numChannels == -1){
+            return null; 
+        }
+
+        int[] r = new int[3];
+
+        r[0] = numRows;
+        r[1] = numCols;
+        r[2] = numChannels;
+
+        return r;
     }
 
     public static int[][][] byteArrayToImageData(byte[] data, int numRows, int numCols, int numChannels){

@@ -24,8 +24,9 @@ public class ClientRunner
     {
         //Determine which command is being invoked.
         //stats, gray, red, blue, green all require an image as an arg (total 2)
-        //grayscale, red, blue, green commands also require a return image argument (total 3)
+        //gray, red, blue, green commands also require a return image argument (total 3)
         //help does not require any input
+        //Address needs to look like: http://localhost:8080
 
         
         System.out.println("Args length: " + args.length);
@@ -100,11 +101,11 @@ public class ClientRunner
     private static void handleGrey(String imagePath, String serverAddress, String greyImagePath){
 
 
-        HttpResponse<String> response = ClientRunner.sendImagePost(imageDataBytes, numRows, numCols, numChannels, serverAddress + "grey/");
+        //HttpResponse<String> response = ClientRunner.sendImagePost(imageDataBytes, numRows, numCols, numChannels, serverAddress + "grey/");
 
-        String responseString = response.body();
+        //String responseString = response.body();
 
-        HttpHeaders header = response.headers();
+        //HttpHeaders header = response.headers();
 
 
 
@@ -229,15 +230,18 @@ public class ClientRunner
     private static void handleStats(String imagePath, String serverAddress){
         int[][][] imageData = Utility.loadImageFromDisk(imagePath);
 
-        //Convert imageData into a hex string.
-        String hexImageData = Utility.imageDataToHexString(imageData);
+        int numRows = imageData.length;
+        int numCols = imageData[0].length;
+        int numChannels = imageData[0][0].length;
 
-        //Create the http client
-        HttpClient client = HttpClient.newHttpClient();
+        //Serialize image data
+        byte[] byteImageData = Utility.imageToByteArray(imageData);
 
-        ClientRunner.sendImagePost(null, 0, 0, 0, serverAddress + "stats/");
+        HttpResponse<String> response = ClientRunner.sendImagePost(byteImageData, numRows, numCols, numChannels, serverAddress + "stats/");
 
-        
+        String body = response.body();
+
+        System.out.println(body);
         
     }
 
@@ -249,11 +253,11 @@ public class ClientRunner
 
             //Create the request
             String imageDataString = Base64.getEncoder().withoutPadding().encodeToString(imageDataBytes);
-            HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(new URI(serverAddress + "grey/")).POST(BodyPublishers.ofString(imageDataString));
+            HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(new URI(serverAddress)).POST(BodyPublishers.ofString(imageDataString));
 
-            requestBuilder.header("numRows", numRows + "");
-            requestBuilder.header("numCols", numCols + "");
-            requestBuilder.header("numChannels", numChannels + "");
+            requestBuilder.header("num_rows", numRows + "");
+            requestBuilder.header("num_cols", numCols + "");
+            requestBuilder.header("num_channels", numChannels + "");
 
             //Send to server, recieve response.
             HttpResponse<String> response = client.send(requestBuilder.build(), BodyHandlers.ofString());
@@ -284,7 +288,7 @@ public class ClientRunner
 
         HttpHeaders headers = response.headers();
 
-        int[] dimensions = ClientRunner.getImageDimensions(headers);
+        int[] dimensions = Utility.getImageDimensions(headers);
 
         if(dimensions != null && dimensions.length == 3){
             numRows = dimensions[0];
@@ -301,33 +305,5 @@ public class ClientRunner
         return returnImage;
     }
 
-    private static int[] getImageDimensions(HttpHeaders headers){
-        int numRows = -1;
-        int numCols = -1;
-        int numChannels = -1;
-
-        if(headers.firstValue("numRows") != null && !headers.firstValue("numRows").isEmpty() && !headers.firstValue("numRows").isPresent()){
-            numRows = Integer.parseInt(headers.firstValue("numRows").get());
-        }
-
-        if(headers.firstValue("numCols") != null && !headers.firstValue("numCols").isEmpty() && !headers.firstValue("numCols").isPresent()){
-            numCols = Integer.parseInt(headers.firstValue("numCols").get());
-        }
-
-        if(headers.firstValue("numChannels") != null && !headers.firstValue("numChannels").isEmpty() && !headers.firstValue("numChannels").isPresent()){
-            numChannels = Integer.parseInt(headers.firstValue("numChannels").get());
-        }
-
-        if(numRows == -1 || numCols == -1 || numChannels == -1){
-            return null; 
-        }
-
-        int[] r = new int[3];
-
-        r[0] = numRows;
-        r[1] = numCols;
-        r[2] = numChannels;
-
-        return r;
-    }
+    
 }

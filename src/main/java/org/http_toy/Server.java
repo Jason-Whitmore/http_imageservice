@@ -19,33 +19,39 @@ public class Server {
     
     public Server(){
         System.out.println("Server started. Any activity will be printed on standard out.");
+
+        
     }
 
     @PostMapping("/stats/")
-    private String getImageStats(@RequestBody String imgDataString){
+    private String getImageStats(@RequestBody String imgDataString, @RequestHeader Map<String, String> headers){
         System.out.println("getImageStats invoked via get mapping");
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("[STRING]Image statistics:\n");
+        sb.append("Image statistics:\n");
 
         //Display image dimensions
 
-        int[][][] imgData = Utility.hexStringToImageData(imgDataString);
+        byte[] byteData = Base64.getDecoder().decode(imgDataString);
+
+        int[] dimensions = Utility.getImageDimensions(headers);
         
-        int rows = imgData.length;
+        int rows = dimensions[0];
         sb.append("Number of rows: " + rows + "\n");
 
-        int cols = imgData[0].length;
+        int cols = dimensions[1];
         sb.append("Number of columns: " + cols + "\n");
 
-        int channels = imgData[0][0].length;
-        sb.append("Number of channels: " + channels + "\n");
+        int channels = dimensions[2];
+        sb.append("Number of channels: " + channels + "\n\n");
+
+        int[][][] imageData = Utility.byteArrayToImageData(byteData, rows, cols, channels);
 
 
         //Display color mode
 
-        int[] mostCommonColor = Utility.getMostCommonColor(imgData);
+        int[] mostCommonColor = Utility.getMostCommonColor(imageData);
 
         sb.append("Most common color:\n");
         
@@ -58,7 +64,7 @@ public class Server {
 
         //Display color mean
 
-        int[] meanColor = Utility.getMeanColor(imgData);
+        int[] meanColor = Utility.getMeanColor(imageData);
 
         sb.append("Mean color:\n");
 
