@@ -1,10 +1,17 @@
 package org.http_toy;
 
 
+import java.util.Base64;
+import java.util.Map;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -38,7 +45,6 @@ public class Server {
 
         //Display color mode
 
-
         int[] mostCommonColor = Utility.getMostCommonColor(imgData);
 
         sb.append("Most common color:\n");
@@ -63,47 +69,79 @@ public class Server {
         return sb.toString();
     }
 
-    @GetMapping("/grayscale/{imgDataString}")
-    private String getGrayscale(@PathVariable String imgDataString){
-        int[][][] imgData = Utility.hexStringToImageData(imgDataString);
+    @PostMapping("/grey/")
+    private ResponseEntity<String> getGrayscale(@RequestHeader Map<String, String> header, @RequestBody String body){
 
+        System.out.println("Processing gray request...");
+
+        //Get metadata from headers
+        int numRows = Integer.parseInt(header.get("num_rows"));
+        int numCols = Integer.parseInt(header.get("num_cols"));
+        int numChannels = Integer.parseInt(header.get("num_channels"));
+
+        //Get data from body
+        byte[] byteData = Base64.getDecoder().decode(body);
+
+        //Convert to 3d array
+        int[][][] imgData = Utility.byteArrayToImageData(byteData, numRows, numCols, numChannels);
+
+        //Convert to grayscale
         int[][][] grayImgData = Utility.convertRGBImageToGrayscaleImage(imgData);
 
-        String grayImgDataString = Utility.imageDataToHexString(grayImgData);
+        //Create http response
+        byte[] imageDataBytes = Utility.imageToByteArray(grayImgData);
 
-        return "[Image]" + grayImgDataString;
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("numRows", numRows + "");
+        headers.add("numCols", numCols + "");
+        headers.add("numChannels", 1 + "");
+
+        return new ResponseEntity<>(Base64.getEncoder().encodeToString(imageDataBytes), headers, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/red/{imgDataString}")
-    private String getRedChannels(@PathVariable String imgDataString){
-        int[][][] imgData = Utility.hexStringToImageData(imgDataString);
+    @PostMapping("/red/")
+    private ResponseEntity<String> getRedChannels(@RequestHeader Map<String, String> header, @RequestBody String body){
 
-        int[][][] redImgData = Utility.isolateChannel(imgData, 0);
+        System.out.println("Processing red request...");
 
-        String redImgDataString = Utility.imageDataToHexString(redImgData);
-
-        return "[Image]" + redImgDataString;
+        return Server.getResponseColorIsolation(header, body, 0);
     }
 
-    @GetMapping("/green/{imgDataString}")
-    private String getGreenChannels(@PathVariable String imgDataString){
-        int[][][] imgData = Utility.hexStringToImageData(imgDataString);
+    @PostMapping("/green/")
+    private ResponseEntity<String> getGreenChannels(@RequestHeader Map<String, String> header, @RequestBody String body){
+        System.out.println("Processing red request...");
 
-        int[][][] greenImgData = Utility.isolateChannel(imgData, 1);
-
-        String greenImgDataString = Utility.imageDataToHexString(greenImgData);
-
-        return "[Image]" + greenImgDataString;
+        return Server.getResponseColorIsolation(header, body, 1);
     }
 
     @PostMapping("/blue/")
-    private String getBlueChannels(@RequestBody String imgDataString){
-        int[][][] imgData = Utility.hexStringToImageData(imgDataString);
+    private ResponseEntity<String> getBlueChannels(@RequestHeader Map<String, String> header, @RequestBody String body){
+        System.out.println("Processing red request...");
 
-        int[][][] blueImgData = Utility.isolateChannel(imgData, 2);
+        return Server.getResponseColorIsolation(header, body, 2);
+    }
 
-        String blueImgDataString = Utility.imageDataToHexString(blueImgData);
+    private static ResponseEntity<String> getResponseColorIsolation(@RequestHeader Map<String, String> header, @RequestBody String body, int channel){
+        int numRows = Integer.parseInt(header.get("num_rows"));
+        int numCols = Integer.parseInt(header.get("num_cols"));
+        int numChannels = Integer.parseInt(header.get("num_channels"));
 
-        return "[Image]" + blueImgDataString;
+        //Get data from body
+        byte[] byteData = Base64.getDecoder().decode(body);
+
+        //Convert to 3d array
+        int[][][] imgData = Utility.byteArrayToImageData(byteData, numRows, numCols, numChannels);
+
+        int[][][] redImgData = Utility.isolateChannel(imgData, channel);
+
+        //Create http response
+        byte[] imageDataBytes = Utility.imageToByteArray(redImgData);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("numRows", numRows + "");
+        headers.add("numCols", numCols + "");
+        headers.add("numChannels", 1 + "");
+
+        return new ResponseEntity<>(Base64.getEncoder().encodeToString(imageDataBytes), headers, HttpStatus.ACCEPTED);
     }
 }

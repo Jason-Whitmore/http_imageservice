@@ -3,11 +3,16 @@ package org.http_toy;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Hello world!
@@ -93,39 +98,17 @@ public class ClientRunner
 
 
     private static void handleGrey(String imagePath, String serverAddress, String greyImagePath){
-        int[][][] imageData = Utility.loadImageFromDisk(imagePath);
-
-        //Convert imageData into a hex string.
-        String hexImageData = Utility.imageDataToHexString(imageData);
-
-        //Create the http client
-        HttpClient client = HttpClient.newHttpClient();
-
-        try{
-
-            //Create the request
-            //Change this to Get? How to add to
-            HttpRequest request = HttpRequest.newBuilder().uri(new URI(serverAddress + "grey/")).POST(BodyPublishers.ofString(hexImageData)).build();
-
-            //Send to server, recieve response.
-            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
 
-            String responseString = response.body();
-            
-            int[][][] grayImageData = Utility.hexStringToImageData(responseString);
+        HttpResponse<String> response = ClientRunner.sendImagePost(imageDataBytes, numRows, numCols, numChannels, serverAddress + "grey/");
 
-            //Image constructed. Now save to the given location
-            Utility.saveImageToDisk(grayImageData, greyImagePath);
+        String responseString = response.body();
 
-            
+        HttpHeaders header = response.headers();
 
-        } catch(IOException e){
-            System.err.println("IOException caught: " + e.toString());
-            System.err.println(Arrays.toString(e.getStackTrace()));
-        }catch(Exception e){
-            System.err.println("Exception caught: " + e.toString());
-        }
+
+
+        
     }
 
     private static void handleRed(String imagePath, String serverAddress, String redImagePath){
@@ -252,32 +235,99 @@ public class ClientRunner
         //Create the http client
         HttpClient client = HttpClient.newHttpClient();
 
+        ClientRunner.sendImagePost(null, 0, 0, 0, serverAddress + "stats/");
+
         
+        
+    }
+
+    private static HttpResponse<String> sendImagePost(byte[] imageDataBytes, int numRows, int numCols, int numChannels, String serverAddress){
+        //Create the http client
+        HttpClient client = HttpClient.newHttpClient();
 
         try{
-            //Create the request
-            //Change this to Get? How to add to
-            HttpRequest request = HttpRequest.newBuilder().uri(new URI(serverAddress + "stats/")).POST(BodyPublishers.ofString(hexImageData)).build();
 
-            
+            //Create the request
+            String imageDataString = Base64.getEncoder().withoutPadding().encodeToString(imageDataBytes);
+            HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(new URI(serverAddress + "grey/")).POST(BodyPublishers.ofString(imageDataString));
+
+            requestBuilder.header("numRows", numRows + "");
+            requestBuilder.header("numCols", numCols + "");
+            requestBuilder.header("numChannels", numChannels + "");
 
             //Send to server, recieve response.
-            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(requestBuilder.build(), BodyHandlers.ofString());
+            return response;
 
-            String responseString = "" + response.body();
             
-
-            //Replace the string start message
-            responseString = responseString.replace("[STRING]", "");
-
-            System.out.println(responseString);
 
         } catch(IOException e){
             System.err.println("IOException caught: " + e.toString());
             System.err.println(Arrays.toString(e.getStackTrace()));
-        }catch(Exception e){
+        } catch(Exception e){
             System.err.println("Exception caught: " + e.toString());
+            System.err.println(Arrays.toString(e.getStackTrace()));
         }
-        
+
+        return null;
+    }
+
+    private static int[][][] sendAndRecieveImage(int[][][] imageData, String serverAddress){
+        //Serialize image data
+        byte[] imageDataBytes = Utility.imageToByteArray(imageData);
+
+        int numRows = imageData.length;
+        int numCols = imageData[0].length;
+        int numChannels = imageData[0][0].length;
+
+        HttpResponse<String> response = ClientRunner.sendImagePost(imageDataBytes, numRows, numCols, numChannels, serverAddress);
+
+        HttpHeaders headers = response.headers();
+
+        int[] dimensions = ClientRunner.getImageDimensions(headers);
+
+        if(dimensions != null && dimensions.length == 3){
+            numRows = dimensions[0];
+            numCols = dimensions[1];
+            numChannels = dimensions[2];
+        }
+
+        String body = response.body();
+
+        byte[] byteImageData = Base64.getDecoder().decode(body);
+
+        int[][][] returnImage = Utility.byteArrayToImageData(byteImageData, numRows, numCols, numChannels);
+
+        return returnImage;
+    }
+
+    private static int[] getImageDimensions(HttpHeaders headers){
+        int numRows = -1;
+        int numCols = -1;
+        int numChannels = -1;
+
+        if(headers.firstValue("numRows") != null && !headers.firstValue("numRows").isEmpty() && !headers.firstValue("numRows").isPresent()){
+            numRows = Integer.parseInt(headers.firstValue("numRows").get());
+        }
+
+        if(headers.firstValue("numCols") != null && !headers.firstValue("numCols").isEmpty() && !headers.firstValue("numCols").isPresent()){
+            numCols = Integer.parseInt(headers.firstValue("numCols").get());
+        }
+
+        if(headers.firstValue("numChannels") != null && !headers.firstValue("numChannels").isEmpty() && !headers.firstValue("numChannels").isPresent()){
+            numChannels = Integer.parseInt(headers.firstValue("numChannels").get());
+        }
+
+        if(numRows == -1 || numCols == -1 || numChannels == -1){
+            return null; 
+        }
+
+        int[] r = new int[3];
+
+        r[0] = numRows;
+        r[1] = numCols;
+        r[2] = numChannels;
+
+        return r;
     }
 }

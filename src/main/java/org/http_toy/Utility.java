@@ -640,5 +640,60 @@ public class Utility {
         }
     }
 
+    public static byte[] imageToByteArray(int[][][] imageData){
+        int numRows = imageData.length;
+        int numCols = imageData[0].length;
+        int numChannels = imageData[0][0].length;
+
+        int bytesPerChannel = 4;
+
+        byte[] byteArray = new byte[numRows * numCols * numChannels * bytesPerChannel];
+
+        int index = 0;
+
+        for(int r = 0; r < numRows; r++){
+            for(int c = 0; c < numCols; c++){
+                for(int channel = 0; channel < numChannels; channel++){
+                    byteArray[index] = (byte)imageData[r][c][channel];
+
+                    index++;
+                }
+            }
+        }
+
+        return byteArray;
+    }
+
+    public static int[][][] byteArrayToImageData(byte[] data, int numRows, int numCols, int numChannels){
+        int[][][] imageData = new int[numRows][numCols][numChannels];
+
+        int index = 0;
+
+        for(int r = 0; r < numRows; r++){
+            for(int c = 0; c < numCols; c++){
+                for(int channel = 0; channel < numChannels; channel++){
+                    imageData[r][c][channel] = (int)data[index];
+                    index++;
+                }
+            }
+        }
+
+
+        return imageData;
+    }
+
+    public static String mapToString(Map<String, String> map, String keyValueDeliminator, String entryDeliminator){
+        StringBuilder sb = new StringBuilder();
+
+        for(String key : map.keySet()){
+            sb.append(key);
+            sb.append(keyValueDeliminator);
+            sb.append(map.get(key));
+            sb.append(entryDeliminator);
+        }
+
+        return sb.toString();
+    }
+
 
 }
