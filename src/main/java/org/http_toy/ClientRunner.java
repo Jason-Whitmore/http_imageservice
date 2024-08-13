@@ -14,6 +14,8 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
+
 /**
  * Hello world!
  *
@@ -61,9 +63,9 @@ public class ClientRunner
                 //handle grey
                 String imagePath = args[1];
                 String address = args[2];
-                String greyImagePath = args[3];
+                String grayImagePath = args[3];
 
-                ClientRunner.handleGrey(imagePath, address, greyImagePath);
+                ClientRunner.handleColor(imagePath, address, grayImagePath, "gray");
 
             } else if(args[0].equals("red")){
                 //handle red
@@ -71,7 +73,7 @@ public class ClientRunner
                 String address = args[2];
                 String redImagePath = args[3];
 
-                ClientRunner.handleRed(imagePath, address, redImagePath);
+                ClientRunner.handleColor(imagePath, address, redImagePath, "red");
 
             } else if(args[0].equals("blue")){
                 //handle blue
@@ -79,7 +81,7 @@ public class ClientRunner
                 String address = args[2];
                 String blueImagePath = args[3];
 
-                ClientRunner.handleBlue(imagePath, address, blueImagePath);
+                ClientRunner.handleColor(imagePath, address, blueImagePath, "blue");
 
             } else if(args[0].equals("green")){
                 //handle green
@@ -87,7 +89,7 @@ public class ClientRunner
                 String address = args[2];
                 String greenImagePath = args[3];
 
-                ClientRunner.handleGreen(imagePath, address, greenImagePath);
+                ClientRunner.handleColor(imagePath, address, greenImagePath, "green");
 
             }
 
@@ -97,135 +99,14 @@ public class ClientRunner
         }
     }
 
-
-    private static void handleGrey(String imagePath, String serverAddress, String greyImagePath){
-
-
-        //HttpResponse<String> response = ClientRunner.sendImagePost(imageDataBytes, numRows, numCols, numChannels, serverAddress + "grey/");
-
-        //String responseString = response.body();
-
-        //HttpHeaders header = response.headers();
-
-
-
-        
-    }
-
-    private static void handleRed(String imagePath, String serverAddress, String redImagePath){
+    private static void handleColor(String imagePath, String serverAddress, String outputImagePath, String color){
         int[][][] imageData = Utility.loadImageFromDisk(imagePath);
 
-        //Convert imageData into a hex string.
-        String hexImageData = Utility.imageDataToHexString(imageData);
+        int[][][] blueImageData = ClientRunner.sendAndRecieveImage(imageData, serverAddress + color + "/");
 
-        //Create the http client
-        HttpClient client = HttpClient.newHttpClient();
-
-        try{
-
-            //Create the request
-            //Change this to Get? How to add to
-            HttpRequest request = HttpRequest.newBuilder().uri(new URI(serverAddress + "red/")).POST(BodyPublishers.ofString(hexImageData)).build();
-
-            //Send to server, recieve response.
-            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-
-
-            String responseString = response.body();
-            
-            int[][][] redImageData = Utility.hexStringToImageData(responseString);
-
-            //Image constructed. Now save to the given location
-            Utility.saveImageToDisk(redImageData, redImagePath);
-
-            
-
-        } catch(IOException e){
-            System.err.println("IOException caught: " + e.toString());
-            System.err.println(Arrays.toString(e.getStackTrace()));
-        }catch(Exception e){
-            System.err.println("Exception caught: " + e.toString());
-        }
+        Utility.saveImageToDisk(blueImageData, outputImagePath);
     }
 
-    private static void handleGreen(String imagePath, String serverAddress, String greenImagePath){
-        int[][][] imageData = Utility.loadImageFromDisk(imagePath);
-
-        //Convert imageData into a hex string.
-        String hexImageData = Utility.imageDataToHexString(imageData);
-
-        //Create the http client
-        HttpClient client = HttpClient.newHttpClient();
-
-        try{
-
-            //Create the request
-            //Change this to Get? How to add to
-            HttpRequest request = HttpRequest.newBuilder().uri(new URI(serverAddress + "green/")).POST(BodyPublishers.ofString(hexImageData)).build();
-
-            //Send to server, recieve response.
-            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-
-
-            String responseString = response.body();
-            
-            int[][][] greenImageData = Utility.hexStringToImageData(responseString);
-
-            //Image constructed. Now save to the given location
-            Utility.saveImageToDisk(greenImageData, greenImagePath);
-
-            
-
-        } catch(IOException e){
-            System.err.println("IOException caught: " + e.toString());
-            System.err.println(Arrays.toString(e.getStackTrace()));
-        }catch(Exception e){
-            System.err.println("Exception caught: " + e.toString());
-        }
-    }
-
-    private static void handleBlue(String imagePath, String serverAddress, String blueImagePath){
-
-        
-        int[][][] imageData = Utility.loadImageFromDisk(imagePath);
-        
-
-        //Convert imageData into a hex string.
-        String hexImageData = Utility.imageDataToHexString(imageData);
-
-        
-
-        //Create the http client
-        HttpClient client = HttpClient.newHttpClient();
-
-        try{
-
-            //Create the request
-            //Change this to Get? How to add to
-            HttpRequest request = HttpRequest.newBuilder().uri(new URI(serverAddress + "blue/")).POST(BodyPublishers.ofString(hexImageData)).build();
-
-            //Send to server, recieve response.
-            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-
-
-            String responseString = response.body();
-
-            responseString = responseString.replace("[Image]", "");
-            
-            int[][][] blueImageData = Utility.hexStringToImageData(responseString);
-
-            //Image constructed. Now save to the given location
-            Utility.saveImageToDisk(blueImageData, blueImagePath);
-
-            
-
-        } catch(IOException e){
-            System.err.println("IOException caught: " + e.toString());
-            System.err.println(Arrays.toString(e.getStackTrace()));
-        }catch(Exception e){
-            System.err.println("Exception caught: " + e.toString());
-        }
-    }
 
     private static void handleStats(String imagePath, String serverAddress){
         int[][][] imageData = Utility.loadImageFromDisk(imagePath);
