@@ -171,6 +171,7 @@ public class ClientRunner
 
         int[] dimensions = Utility.getImageDimensions(headers);
 
+
         if(dimensions != null && dimensions.length == 3){
             numRows = dimensions[0];
             numCols = dimensions[1];

@@ -7,8 +7,6 @@ import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -19,13 +17,13 @@ public class Server {
     
     public Server(){
         System.out.println("Server started. Any activity will be printed on standard out.");
-
-        
     }
 
     @PostMapping("/stats/")
     private String getImageStats(@RequestBody String imgDataString, @RequestHeader Map<String, String> headers){
         System.out.println("getImageStats invoked via get mapping");
+
+        
 
         StringBuilder sb = new StringBuilder();
 
@@ -75,7 +73,7 @@ public class Server {
         return sb.toString();
     }
 
-    @PostMapping("/grey/")
+    @PostMapping("/gray/")
     private ResponseEntity<String> getGrayscale(@RequestHeader Map<String, String> header, @RequestBody String body){
 
         System.out.println("Processing gray request...");
@@ -98,9 +96,9 @@ public class Server {
         byte[] imageDataBytes = Utility.imageToByteArray(grayImgData);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("numRows", numRows + "");
-        headers.add("numCols", numCols + "");
-        headers.add("numChannels", 1 + "");
+        headers.add("num_rows", numRows + "");
+        headers.add("num_cols", numCols + "");
+        headers.add("num_channels", 1 + "");
 
         return new ResponseEntity<>(Base64.getEncoder().encodeToString(imageDataBytes), headers, HttpStatus.ACCEPTED);
     }
@@ -144,9 +142,9 @@ public class Server {
         byte[] imageDataBytes = Utility.imageToByteArray(redImgData);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("numRows", numRows + "");
-        headers.add("numCols", numCols + "");
-        headers.add("numChannels", 1 + "");
+        headers.add("num_rows", numRows + "");
+        headers.add("num_cols", numCols + "");
+        headers.add("num_channels", 1 + "");
 
         return new ResponseEntity<>(Base64.getEncoder().encodeToString(imageDataBytes), headers, HttpStatus.ACCEPTED);
     }
