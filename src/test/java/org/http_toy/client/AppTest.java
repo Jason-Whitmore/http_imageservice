@@ -1,13 +1,19 @@
 package org.http_toy.client;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+//import org.springframework.http.HttpHeaders;
+import java.net.http.HttpHeaders;
+import java.net.http.HttpRequest;
 
 import org.http_toy.Utility;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Unit test for simple App.
@@ -95,27 +101,55 @@ public class AppTest
 
     @Test
     public void testIsolateChannel(){
-        
+        int[][][] image = new int[1][1][3];
+        image[0][0][0] = 100;
+        image[0][0][1] = 200;
+        image[0][0][2] = 300;
+
+        int[][][] isolatedImage = Utility.isolateChannel(image, 1);
+
+        assertTrue(isolatedImage[0][0][0] == 200);
     }
 
     @Test
     public void testImageToByteArray(){
+        //Initializing image to be completely black (all zero entries)
 
+        int[][][] image = new int[2][2][3];
+
+        byte[] b = Utility.imageToByteArray(image);
+        byte[] target = new byte[b.length];
+
+        assertArrayEquals(target, b);
     }
 
     @Test
     public void testGetImageDimensions1(){
+        Map<String, String> map = new HashMap<>();
+        map.put("num_rows", "2");
+        map.put("num_cols", "2");
+        map.put("num_channels", "3");
 
+        int[] targetDims = new int[]{2,2,3};
+
+        int[] dims = Utility.getImageDimensions(map);
+
+        assertArrayEquals(targetDims, dims);
     }
 
     @Test
     public void testGetImageDimensions2(){
-
+        //TODO: Figure out how to do the http request code test here. Check server or client code to see usage.
     }
 
     @Test
     public void testByteArrayToImageData(){
         
+        byte[] b = new byte[12];
+        int[][][] image = Utility.byteArrayToImageData(b, 2, 2, 3);
+        int[][][] target = new int[2][2][3];
+
+        assertArrayEquals(image, target);
     }
 
 }

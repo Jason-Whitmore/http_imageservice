@@ -258,35 +258,18 @@ public class Utility {
     }
 
     public static int[] getImageDimensions(HttpHeaders headers){
-        int numRows = -1;
-        int numCols = -1;
-        int numChannels = -1;
 
         Map<String, List<String>> headerMap = headers.map();
+        Map<String, String> map = new HashMap<>();
 
-        if(headerMap.containsKey("num_rows")){
-            numRows = Integer.parseInt(headerMap.get("num_rows").get(0));
+        for(String key: headerMap.keySet()){
+            if(headerMap.get(key).size() > 0){
+                map.put(key, headerMap.get(key).get(0));
+            }
+            
         }
 
-        if(headerMap.containsKey("num_cols")){
-            numCols = Integer.parseInt(headerMap.get("num_cols").get(0));
-        }
-
-        if(headerMap.containsKey("num_channels")){
-            numChannels = Integer.parseInt(headerMap.get("num_channels").get(0));
-        }
-
-        if(numRows == -1 || numCols == -1 || numChannels == -1){
-            return null; 
-        }
-
-        int[] r = new int[3];
-
-        r[0] = numRows;
-        r[1] = numCols;
-        r[2] = numChannels;
-
-        return r;
+        return Utility.getImageDimensions(map);
     }
 
     public static int[] getImageDimensions(Map<String, String> map){
