@@ -4,15 +4,19 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import java.net.URI;
 //import org.springframework.http.HttpHeaders;
 import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
 
 import org.http_toy.Utility;
 
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 
 /**
@@ -139,7 +143,29 @@ public class AppTest
 
     @Test
     public void testGetImageDimensions2(){
-        //TODO: Figure out how to do the http request code test here. Check server or client code to see usage.
+        int[][][] imageData = new int[2][2][3];
+        byte[] imageDataBytes = Utility.imageToByteArray(imageData);
+        String imageDataString = Base64.getEncoder().withoutPadding().encodeToString(imageDataBytes);
+
+        String URIString = "http://localhost:8080";
+        try {
+            
+            HttpRequest.Builder builder = HttpRequest.newBuilder().uri(new URI(URIString)).POST(BodyPublishers.ofString(imageDataString));
+
+            builder.header("num_rows", 2 + "");
+            builder.header("num_cols", 2 + "");
+            builder.header("num_channels", 3 + "");
+
+            HttpRequest req = builder.build();
+            int[] output = Utility.getImageDimensions(req.headers());
+
+            int[] target = new int[]{2, 2, 3};
+
+            assertArrayEquals(output, target);
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+        
     }
 
     @Test
