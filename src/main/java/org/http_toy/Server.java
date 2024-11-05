@@ -57,7 +57,7 @@ public class Server {
             sb.append("Channel " + i + ": " + mostCommonColor[i] + "\n");
         }
 
-        sb.append("Occurences: " + mostCommonColor[mostCommonColor.length - 1] + "\n\n");
+        sb.append("Occurrences: " + mostCommonColor[mostCommonColor.length - 1] + "\n\n");
 
 
         //Display color mean

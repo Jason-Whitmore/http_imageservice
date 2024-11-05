@@ -6,8 +6,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import java.net.URI;
-//import org.springframework.http.HttpHeaders;
-import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 

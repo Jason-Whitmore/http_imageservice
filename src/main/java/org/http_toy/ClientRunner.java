@@ -6,15 +6,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
 
 /**
  * Hello world!
@@ -22,16 +17,15 @@ import org.springframework.boot.autoconfigure.integration.IntegrationProperties.
  */
 public class ClientRunner 
 {
+    //Compile/run this code with: mvn compile exec:java -Dexec.mainClass=org.http_toy.ClientRunner -Dexec.args="stats olympic.jpg http://localhost:8080/"
+
     public static void main( String[] args )
     {
         //Determine which command is being invoked.
         //stats, gray, red, blue, green all require an image as an arg (total 2)
         //gray, red, blue, green commands also require a return image argument (total 3)
         //help does not require any input
-        //Address needs to look like: http://localhost:8080
-
-        
-        System.out.println("Args length: " + args.length);
+        //Address needs to look like: http://localhost:8080/
 
 
         if(args.length == 1){

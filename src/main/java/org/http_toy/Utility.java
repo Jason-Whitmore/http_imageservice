@@ -14,9 +14,16 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * This class contains helpful static methods for use in the rest of the project.
+ */
 public class Utility {
     
-
+    /**
+     * Converts an RGB input image into a grayscale image.
+     * @param rgbImage The RGB image to convert. The third dimension must be of length 3 (for 3 channels).
+     * @return The grayscale output image. The third dimension has a length of 1.
+     */
     public static int[][][] convertRGBImageToGrayscaleImage(int[][][] rgbImage){
         int rows = rgbImage.length;
         int cols = rgbImage[0].length;
@@ -37,7 +44,11 @@ public class Utility {
         return grayImage;
     }
 
-
+    /**
+     * Gets the most common color in the image input. This is like a color "mode"
+     * @param imgData The input image. Can have any amount of channels.
+     * @return The most common color. Each element is the signal of the channel.
+     */
     public static int[] getMostCommonColor(int[][][] imgData){
         Map<List<Integer>, Integer> colorMap = new HashMap<>();
 
@@ -58,7 +69,7 @@ public class Utility {
 
         //Select most commonly occuring
         int max = 0;
-        List<Integer> bestColor = null;
+        List<Integer> bestColor = new ArrayList<>();
 
         for(List<Integer> color : colorMap.keySet()){
             if(colorMap.get(color) > max){
@@ -71,10 +82,14 @@ public class Utility {
         bestColor.add(max);
 
         //Max found. Convert back to array
-
         return Utility.listToArray(bestColor);
     }
 
+    /**
+     * 
+     * @param imgData
+     * @return
+     */
     public static int[] getMeanColor(int[][][] imgData){
         int channels = imgData[0][0].length;
 
