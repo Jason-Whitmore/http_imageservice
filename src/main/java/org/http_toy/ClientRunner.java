@@ -31,7 +31,7 @@ public class ClientRunner
         if(args.length == 1){
             //Could be help
             if(args[0].equals("help")){
-
+                ClientRunner.handleHelp();
             }
         } else if(args.length == 2){
 
@@ -91,6 +91,47 @@ public class ClientRunner
             //No valid command
             System.out.println("Not a valid command. Try 'imageclient help' to see available options.");
         }
+    }
+
+    private static void handleHelp(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Commands:\n\n");
+
+        sb.append("Stats:\n");
+        sb.append("Usage: ClientRunner stats [image path] [address]\n");
+        sb.append("Example: ClientRunner stats image.png http://localhost:8080/\n");
+        sb.append("Description: Server will respond with statistics about the image that was sent, including image size,\n");
+        sb.append("mean color, and most commonly occurring color.\n\n");
+
+        sb.append("Gray");
+        sb.append("Usage: ClientRunner gray [image path] [address] [output image path]\n");
+        sb.append("Example: ClientRunner gray image.png http://localhost:8080/ gray_image.png\n");
+        sb.append("Description: Server will respond with the request image converted into grayscale. This output image will be\n");
+        sb.append("saved to the specified location.\n\n");
+
+        sb.append("Red");
+        sb.append("Usage: ClientRunner red [image path] [address] [output image path]\n");
+        sb.append("Example: ClientRunner red image.png http://localhost:8080/ output.png\n");
+        sb.append("Description: Server will respond with the request image's red channel isolated. This output image will be\n");
+        sb.append("saved to the specified location. The output image will be in grayscale, with white areas representing strong\n");
+        sb.append("red signals, and black areas with weak red signals.");
+
+        sb.append("Green");
+        sb.append("Usage: ClientRunner green [image path] [address] [output image path]\n");
+        sb.append("Example: ClientRunner green image.png http://localhost:8080/ output.png\n");
+        sb.append("Description: Server will respond with the request image's green channel isolated. This output image will be\n");
+        sb.append("saved to the specified location. The output image will be in grayscale, with white areas representing strong\n");
+        sb.append("green signals, and black areas with weak green signals.");
+
+        sb.append("Blue");
+        sb.append("Usage: ClientRunner blue [image path] [address] [output image path]\n");
+        sb.append("Example: ClientRunner blue image.png http://localhost:8080/ output.png\n");
+        sb.append("Description: Server will respond with the request image's blue channel isolated. This output image will be\n");
+        sb.append("saved to the specified location. The output image will be in grayscale, with white areas representing strong\n");
+        sb.append("blue signals, and black areas with weak blue signals.");
+
+
+        System.out.println(sb.toString());
     }
 
     private static void handleColor(String imagePath, String serverAddress, String outputImagePath, String color){
