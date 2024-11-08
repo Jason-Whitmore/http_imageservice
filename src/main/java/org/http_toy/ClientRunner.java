@@ -86,10 +86,16 @@ public class ClientRunner
         }
     }
 
+    /**
+     * Prints a specific message to standard out when the command is unknown.
+     */
     private static void handleUnknown(){
         System.out.println("Not a valid command. Try running this program with the 'help' argument to see available options.");
     }
 
+    /**
+     * Prints information about the various commands to standard out. Information includes syntax and examples.
+     */
     private static void handleHelp(){
         StringBuilder sb = new StringBuilder();
         sb.append("Commands:\n\n");
@@ -131,10 +137,17 @@ public class ClientRunner
         System.out.println(sb.toString());
     }
 
-    private static void handleColor(String imagePath, String serverAddress, String outputImagePath, String color){
-        int[][][] imageData = Utility.loadImageFromDisk(imagePath);
+    /**
+     * Handles the color commands.
+     * @param inputImagePath The file path of the input image.
+     * @param serverAddress The server address. This should include the last "/" at the end.
+     * @param outputImagePath The file path where the output image should be written.
+     * @param color The color that will be isolated in the output image.
+     */
+    private static void handleColor(String inputImagePath, String serverAddress, String outputImagePath, String color){
+        int[][][] imageData = Utility.loadImageFromDisk(inputImagePath);
 
-        int[][][] outputImageData = ClientRunner.sendAndRecieveImage(imageData, serverAddress + color + "/");
+        int[][][] outputImageData = ClientRunner.sendAndReceiveImage(imageData, serverAddress + color + "/");
 
         if(outputImageData == null){
             System.out.println("Server could not respond with output image. Try again.");
@@ -144,9 +157,13 @@ public class ClientRunner
         Utility.saveImageToDisk(outputImageData, outputImagePath);
     }
 
-
-    private static void handleStats(String imagePath, String serverAddress){
-        int[][][] imageData = Utility.loadImageFromDisk(imagePath);
+    /**
+     * Handles the stat command.
+     * @param inputImagePath The file path of the input image.
+     * @param serverAddress The server address. This should include the last "/" character at the end.
+     */
+    private static void handleStats(String inputImagePath, String serverAddress){
+        int[][][] imageData = Utility.loadImageFromDisk(inputImagePath);
 
         int numRows = imageData.length;
         int numCols = imageData[0].length;
@@ -167,6 +184,15 @@ public class ClientRunner
         
     }
 
+    /**
+     * Sends an image via HTTP request.
+     * @param imageDataBytes The image to be sent, represented as an array of bytes.
+     * @param numRows The number of rows in the image.
+     * @param numCols The number of cols in the image.
+     * @param numChannels The number of channels in the image.
+     * @param serverAddress The server address to send the image to. Should include the final "/" character at the end.
+     * @return The HTTP response
+     */
     private static HttpResponse<String> sendImagePost(byte[] imageDataBytes, int numRows, int numCols, int numChannels, String serverAddress){
         //Create the http client
         HttpClient client = HttpClient.newHttpClient();
@@ -198,7 +224,13 @@ public class ClientRunner
         return null;
     }
 
-    private static int[][][] sendAndRecieveImage(int[][][] imageData, String serverAddress){
+    /**
+     * Sends and receives image via HTTP
+     * @param imageData The image to send
+     * @param serverAddress The server address to send the image to. Should include the last "/" character at the end.
+     * @return The received image from the server.
+     */
+    private static int[][][] sendAndReceiveImage(int[][][] imageData, String serverAddress){
         //Serialize image data
         byte[] imageDataBytes = Utility.imageToByteArray(imageData);
 
