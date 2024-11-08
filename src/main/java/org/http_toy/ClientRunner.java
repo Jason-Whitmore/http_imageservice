@@ -28,26 +28,17 @@ public class ClientRunner
         //Address needs to look like: http://localhost:8080/
 
 
-        if(args.length == 1){
-            //Could be help
-            if(args[0].equals("help")){
-                ClientRunner.handleHelp();
-            }
-        } else if(args.length == 2){
-
-            
+        if(args.length == 1 || args.length == 2){
+            ClientRunner.handleHelp();
         } else if(args.length == 3){
-            
-            
-            
             //Could be stats
             if(args[0].equals("stats")){
                 String imagePath = args[1];
                 String address = args[2];
 
-                System.out.println("Image path: " + imagePath);
-
                 ClientRunner.handleStats(imagePath, address);
+            } else {
+                ClientRunner.handleUnknown();
             }
 
         } else if(args.length == 4){
@@ -85,12 +76,18 @@ public class ClientRunner
 
                 ClientRunner.handleColor(imagePath, address, greenImagePath, "green");
 
+            } else {
+                ClientRunner.handleUnknown();
             }
 
         } else {
             //No valid command
-            System.out.println("Not a valid command. Try 'imageclient help' to see available options.");
+            ClientRunner.handleUnknown();
         }
+    }
+
+    private static void handleUnknown(){
+        System.out.println("Not a valid command. Try running this program with the 'help' argument to see available options.");
     }
 
     private static void handleHelp(){
@@ -103,27 +100,27 @@ public class ClientRunner
         sb.append("Description: Server will respond with statistics about the image that was sent, including image size,\n");
         sb.append("mean color, and most commonly occurring color.\n\n");
 
-        sb.append("Gray");
+        sb.append("Gray:\n");
         sb.append("Usage: ClientRunner gray [image path] [address] [output image path]\n");
         sb.append("Example: ClientRunner gray image.png http://localhost:8080/ gray_image.png\n");
         sb.append("Description: Server will respond with the request image converted into grayscale. This output image will be\n");
         sb.append("saved to the specified location.\n\n");
 
-        sb.append("Red");
+        sb.append("Red:\n");
         sb.append("Usage: ClientRunner red [image path] [address] [output image path]\n");
         sb.append("Example: ClientRunner red image.png http://localhost:8080/ output.png\n");
         sb.append("Description: Server will respond with the request image's red channel isolated. This output image will be\n");
         sb.append("saved to the specified location. The output image will be in grayscale, with white areas representing strong\n");
-        sb.append("red signals, and black areas with weak red signals.");
+        sb.append("red signals, and black areas with weak red signals.\n\n");
 
-        sb.append("Green");
+        sb.append("Green:\n");
         sb.append("Usage: ClientRunner green [image path] [address] [output image path]\n");
         sb.append("Example: ClientRunner green image.png http://localhost:8080/ output.png\n");
         sb.append("Description: Server will respond with the request image's green channel isolated. This output image will be\n");
         sb.append("saved to the specified location. The output image will be in grayscale, with white areas representing strong\n");
-        sb.append("green signals, and black areas with weak green signals.");
+        sb.append("green signals, and black areas with weak green signals.\n\n");
 
-        sb.append("Blue");
+        sb.append("Blue:\n");
         sb.append("Usage: ClientRunner blue [image path] [address] [output image path]\n");
         sb.append("Example: ClientRunner blue image.png http://localhost:8080/ output.png\n");
         sb.append("Description: Server will respond with the request image's blue channel isolated. This output image will be\n");
