@@ -134,9 +134,14 @@ public class ClientRunner
     private static void handleColor(String imagePath, String serverAddress, String outputImagePath, String color){
         int[][][] imageData = Utility.loadImageFromDisk(imagePath);
 
-        int[][][] blueImageData = ClientRunner.sendAndRecieveImage(imageData, serverAddress + color + "/");
+        int[][][] outputImageData = ClientRunner.sendAndRecieveImage(imageData, serverAddress + color + "/");
 
-        Utility.saveImageToDisk(blueImageData, outputImagePath);
+        if(outputImageData == null){
+            System.out.println("Server could not respond with output image. Try again.");
+        }
+
+
+        Utility.saveImageToDisk(outputImageData, outputImagePath);
     }
 
 
@@ -153,6 +158,10 @@ public class ClientRunner
         HttpResponse<String> response = ClientRunner.sendImagePost(byteImageData, numRows, numCols, numChannels, serverAddress + "stats/");
 
         String body = response.body();
+
+        if(response == null || response.body() == null){
+            System.out.println("Server could not respond with image stats. Try again.");
+        }
 
         System.out.println(body);
         
@@ -199,9 +208,14 @@ public class ClientRunner
 
         HttpResponse<String> response = ClientRunner.sendImagePost(imageDataBytes, numRows, numCols, numChannels, serverAddress);
 
+        if(response == null || response.headers() == null || response.body() == null){
+            return null;
+        }
+
         HttpHeaders headers = response.headers();
 
         int[] dimensions = Utility.getImageDimensions(headers);
+        String body = response.body();
 
 
         if(dimensions != null && dimensions.length == 3){
@@ -210,7 +224,7 @@ public class ClientRunner
             numChannels = dimensions[2];
         }
 
-        String body = response.body();
+        
 
         byte[] byteImageData = Base64.getDecoder().decode(body);
 
