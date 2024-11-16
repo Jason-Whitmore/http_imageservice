@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Base64;
 
 /**
- * Hello world!
+ * 
  *
  */
 public class ClientRunner 

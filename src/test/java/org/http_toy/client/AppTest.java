@@ -18,7 +18,7 @@ import java.util.Base64;
 import java.util.HashMap;
 
 /**
- * Unit test for simple App.
+ * Unit tests for HTTP ImageService
  */
 public class AppTest 
 {
