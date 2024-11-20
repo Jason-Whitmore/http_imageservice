@@ -77,6 +77,24 @@
           <version>3.1.0</version>
         </plugin>
 
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <configuration>
+            <appendAssemblyId>true</appendAssemblyId>
+            <archive>
+              <manifest>
+                <mainClass>org.http_toy.ServerRunner</mainClass>
+              </manifest>
+            </archive>
+            <descriptorRefs>
+              <descriptorRef>jar-with-dependencies</descriptorRef>
+            </descriptorRefs>
+            <finalName>ServerRunner</finalName>
+            <appendAssemblyId>false</appendAssemblyId>
+            <outputDirectory>.</outputDirectory>
+          </configuration>
+        </plugin>
+
 
 
         <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->

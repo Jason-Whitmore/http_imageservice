@@ -1,3 +1,5 @@
 build:
-	mvn clean compile jar:jar -DoutputDirectory=${project.build.directory}
-	mvn clean compile jar:jar -DoutputDirectory=${project}
+	mvn -f pom_client.xml compile assembly:single
+	mvn -f pom_server.xml compile assembly:single
+clean:
+	mvn clean
