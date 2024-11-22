@@ -86,9 +86,9 @@ public class Utility {
     }
 
     /**
-     * 
-     * @param imgData
-     * @return
+     * Gets the mean color from the image.
+     * @param imgData The image to get the mean color from
+     * @return The mean color with each channel in the range [0, 255]
      */
     public static int[] getMeanColor(int[][][] imgData){
         int channels = imgData[0][0].length;
@@ -119,6 +119,11 @@ public class Utility {
         return r;
     }
 
+    /**
+     * Converts an integer array into a list of Integers
+     * @param nums The integer array to convert.
+     * @return The converted numbers in a List
+     */
     public static List<Integer> arrayToList(int[] nums){
         List<Integer> l = new ArrayList<>();
 
@@ -129,6 +134,11 @@ public class Utility {
         return l;
     }
 
+    /**
+     * Converts a List of Integers into an integer array
+     * @param l The list to convert
+     * @return The integer array
+     */
     public static int[] listToArray(List<Integer> l){
         int[] array = new int[l.size()];
 
@@ -139,6 +149,12 @@ public class Utility {
         return array;
     }
 
+    /**
+     * Isolates a channel in an image. All other channels are removed in the returned image.
+     * @param imgData The input image.
+     * @param channel The channel to be isolated. 0, 1, 2 for red, green, blue, respectively.
+     * @return A new image with the isolated channel
+     */
     public static int[][][] isolateChannel(int[][][] imgData, int channel){
         int rows = imgData.length;
         int cols = imgData[0].length;
