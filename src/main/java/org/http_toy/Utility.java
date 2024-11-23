@@ -170,6 +170,11 @@ public class Utility {
         return ret;
     }
 
+    /**
+     * Loads a file from disk and returns it as a 3d array
+     * @param filePath The filepath of the image on disk.
+     * @return The image as a 3d array
+     */
     public static int[][][] loadImageFromDisk(String filePath){
         BufferedImage image = null;
         try{
@@ -219,6 +224,11 @@ public class Utility {
         return imageData;
     }
 
+    /**
+     * Saves the image to a location on disk.
+     * @param imageData The image to save
+     * @param filePath The filepath to where the image will be saved.
+     */
     public static void saveImageToDisk(int[][][] imageData, String filePath){
         int numRows = imageData.length;
         int numCols = imageData[0].length;
@@ -255,8 +265,6 @@ public class Utility {
 
             String fileType = filePath.substring(filePath.indexOf(".") + 1);
 
-            System.out.println("File type: " + fileType);
-
             ImageIO.write(bi, fileType, f);
         } catch(IOException e){
             System.err.println("Exception occured when trying to save image to file in Utility.saveImageToDisk()");
@@ -264,6 +272,11 @@ public class Utility {
         }
     }
 
+    /**
+     * Converts an image (3d array) into a 1d array of bytes
+     * @param imageData The image to convert
+     * @return The 1d array of bytes. This does not contain any of the image width, height, or number of channels
+     */
     public static byte[] imageToByteArray(int[][][] imageData){
         int numRows = imageData.length;
         int numCols = imageData[0].length;
@@ -288,6 +301,11 @@ public class Utility {
         return byteArray;
     }
 
+    /**
+     * Gets the image dimensions (width, height, and number of channels) from a HTTP header
+     * @param headers The HTTP header that contains image dimensions
+     * @return The dimensions of the image. The ordering is: num rows, num cols, num channels
+     */
     public static int[] getImageDimensions(HttpHeaders headers){
 
         Map<String, List<String>> headerMap = headers.map();
@@ -303,6 +321,11 @@ public class Utility {
         return Utility.getImageDimensions(map);
     }
 
+    /**
+     * Gets the image dimensions (width, height, and number of channels) from a HTTP header
+     * @param map The map that contains image dimensions
+     * @return The dimensions of the image. The ordering is: num rows, num cols, num channels
+     */
     public static int[] getImageDimensions(Map<String, String> map){
         int numRows = -1;
         int numCols = -1;
@@ -337,6 +360,14 @@ public class Utility {
         return r;
     }
 
+    /**
+     * Converts a byte array and image metadata into an image
+     * @param data The bytes containing the pixel information of an image
+     * @param numRows The number of rows in the image
+     * @param numCols The number of columns in the image
+     * @param numChannels The number of channels in the image
+     * @return The image as a 3d array
+     */
     public static int[][][] byteArrayToImageData(byte[] data, int numRows, int numCols, int numChannels){
         int[][][] imageData = new int[numRows][numCols][numChannels];
 
