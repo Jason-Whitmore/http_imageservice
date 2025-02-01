@@ -23,8 +23,6 @@ public class Server {
     private String getImageStats(@RequestBody String imgDataString, @RequestHeader Map<String, String> headers){
         System.out.println("getImageStats invoked via get mapping");
 
-        
-
         StringBuilder sb = new StringBuilder();
 
         sb.append("Image statistics:\n");
@@ -113,14 +111,14 @@ public class Server {
 
     @PostMapping("/green/")
     private ResponseEntity<String> getGreenChannels(@RequestHeader Map<String, String> header, @RequestBody String body){
-        System.out.println("Processing red request...");
+        System.out.println("Processing green request...");
 
         return Server.getResponseColorIsolation(header, body, 1);
     }
 
     @PostMapping("/blue/")
     private ResponseEntity<String> getBlueChannels(@RequestHeader Map<String, String> header, @RequestBody String body){
-        System.out.println("Processing red request...");
+        System.out.println("Processing blue request...");
 
         return Server.getResponseColorIsolation(header, body, 2);
     }
@@ -136,10 +134,10 @@ public class Server {
         //Convert to 3d array
         int[][][] imgData = Utility.byteArrayToImageData(byteData, numRows, numCols, numChannels);
 
-        int[][][] redImgData = Utility.isolateChannel(imgData, channel);
+        int[][][] colorImgData = Utility.isolateChannel(imgData, channel);
 
         //Create http response
-        byte[] imageDataBytes = Utility.imageToByteArray(redImgData);
+        byte[] imageDataBytes = Utility.imageToByteArray(colorImgData);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("num_rows", numRows + "");
