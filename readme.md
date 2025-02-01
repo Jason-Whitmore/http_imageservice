@@ -40,6 +40,15 @@ To run the client, use the command:
 
 where `[command]` is the command for the program.
 
+
+## Testing the project
+
+To test the project, use the command:
+
+`make test`
+
+This will run the unit tests that are in AppTest.java.
+
 ## Commands
 
 
@@ -55,33 +64,43 @@ This will print information to standard out about what commands are available.
 
 ### Stats
 Usage: ClientRunner stats [image path] [address]
+
 Example: ClientRunner stats image.png http://localhost:8080/
+
 Description: Server will respond with statistics about the image that was sent, including image size,
 mean color, and most commonly occurring color.
 
 ### Gray
 Usage: ClientRunner gray [image path] [address] [output image path]
+
 Example: ClientRunner gray image.png http://localhost:8080/ gray_image.png
+
 Description: Server will respond with the request image converted into grayscale. This output image will be
 saved to the specified location.
 
 ### Red
 Usage: ClientRunner red [image path] [address] [output image path]
+
 Example: ClientRunner red image.png http://localhost:8080/ output.png
+
 Description: Server will respond with the request image's red channel isolated. This output image will be
 saved to the specified location. The output image will be in grayscale, with white areas representing strong
 red signals, and black areas with weak red signals.
 
 ### Green
 Usage: ClientRunner green [image path] [address] [output image path]
+
 Example: ClientRunner green image.png http://localhost:8080/ output.png
+
 Description: Server will respond with the request image's green channel isolated. This output image will be
 saved to the specified location. The output image will be in grayscale, with white areas representing strong
 green signals, and black areas with weak green signals.
 
 ### Blue
 Usage: ClientRunner blue [image path] [address] [output image path]
+
 Example: ClientRunner blue image.png http://localhost:8080/ output.png
+
 Description: Server will respond with the request image's blue channel isolated. This output image will be
 saved to the specified location. The output image will be in grayscale, with white areas representing strong
 blue signals, and black areas with weak blue signals.
@@ -96,35 +115,35 @@ With this example image:
 
 Running `java -jar stats example_input.jpg http://localhost:8080/` will output:
 
->>Image statistics:
+>Image statistics:
 
->>Number of rows: 750
+>Number of rows: 750
 
->>Number of columns: 1000
+>Number of columns: 1000
 
->>Number of channels: 3
+>Number of channels: 3
 
->>Most common color:
+>Most common color:
 
->>Channel 0: 10
+>Channel 0: 10
 
->>Channel 1: 18
+>Channel 1: 18
 
->>Channel 2: 21
+>Channel 2: 21
 
->>Occurrences: 1639
+>Occurrences: 1639
 
->>Mean color:
+>Mean color:
 
->>Channel 0: 15
+>Channel 0: 15
 
->>Channel 1: 31
+>Channel 1: 31
 
->>Channel 2: 19
+>Channel 2: 19
 
 Running `java -jar blue example_input.jpg http://localhost:8080/ blue_output.jpg` will output:
 
 ![Blue output image](blue_output.jpg)
 
-The blue areas of the image (mainly the sky and water) are are shown as brighter than other parts of the image,
+The blue areas of the image (mainly the sky and water) are shown as brighter than other parts of the image,
 indicating high blue signals.
