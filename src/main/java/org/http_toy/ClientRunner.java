@@ -146,11 +146,16 @@ public class ClientRunner
      */
     private static void handleColor(String inputImagePath, String serverAddress, String outputImagePath, String color){
         int[][][] imageData = Utility.loadImageFromDisk(inputImagePath);
+        if(imageData == null){
+            System.out.println("Could not read image. Try again.");
+            return;
+        }
 
         int[][][] outputImageData = ClientRunner.sendAndReceiveImage(imageData, serverAddress + color + "/");
 
         if(outputImageData == null){
             System.out.println("Server could not respond with output image. Try again.");
+            return;
         }
 
 
@@ -164,6 +169,10 @@ public class ClientRunner
      */
     private static void handleStats(String inputImagePath, String serverAddress){
         int[][][] imageData = Utility.loadImageFromDisk(inputImagePath);
+        if(imageData == null){
+            System.out.println("Could not read image. Try again.");
+            return;
+        }
 
         int numRows = imageData.length;
         int numCols = imageData[0].length;
@@ -178,6 +187,7 @@ public class ClientRunner
 
         if(response == null || response.body() == null){
             System.out.println("Server could not respond with image stats. Try again.");
+            return;
         }
 
         System.out.println(body);

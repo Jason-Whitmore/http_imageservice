@@ -34,7 +34,7 @@ public class Server {
      */
     @PostMapping("/stats/")
     private ResponseEntity<String> getImageStats(@RequestHeader Map<String, String> headers, @RequestBody String imgDataString){
-        System.out.println("getImageStats invoked via get mapping");
+        System.out.println("getImageStats invoked");
 
         StringBuilder sb = new StringBuilder();
 
@@ -77,9 +77,11 @@ public class Server {
 
         sb.append("Mean color:\n");
 
-        for(int i = 0; i < meanColor.length; i++){
+        for(int i = 0; i < meanColor.length - 1; i++){
             sb.append("Channel " + i + ": " + meanColor[i] + "\n");
         }
+
+        sb.append("Channel " + (meanColor.length - 1) + ": " + meanColor[(meanColor.length - 1)]);
 
         return new ResponseEntity<String>(sb.toString(), new HttpHeaders(), HttpStatus.ACCEPTED);
     }
