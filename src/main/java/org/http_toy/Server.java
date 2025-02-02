@@ -12,15 +12,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+
+/**
+ * Defines the Server class which handles requests from clients and sends responses back.
+ */
 @RestController
 public class Server {
     
+    /**
+     * Initializes the server.
+     */
     public Server(){
         System.out.println("Server started. Any activity will be printed on standard out.");
     }
 
+    /**
+     * Handles the stats request
+     * @param headers The HTTP headers containing image metadata: num_rows, num_cols, num_channels
+     * @param imgDataString The image as a data string
+     * @return The response to the client
+     */
     @PostMapping("/stats/")
-    private String getImageStats(@RequestBody String imgDataString, @RequestHeader Map<String, String> headers){
+    private ResponseEntity<String> getImageStats(@RequestHeader Map<String, String> headers, @RequestBody String imgDataString){
         System.out.println("getImageStats invoked via get mapping");
 
         StringBuilder sb = new StringBuilder();
@@ -68,9 +81,15 @@ public class Server {
             sb.append("Channel " + i + ": " + meanColor[i] + "\n");
         }
 
-        return sb.toString();
+        return new ResponseEntity<String>(sb.toString(), new HttpHeaders(), HttpStatus.ACCEPTED);
     }
 
+    /**
+     * Handles the request to return the image as a grayscale image
+     * @param header The HTTP header containing image metadata: num_rows, num_cols, num_channels
+     * @param body The HTTP body containing the image data
+     * @return The HTTP response to the client.
+     */
     @PostMapping("/gray/")
     private ResponseEntity<String> getGrayscale(@RequestHeader Map<String, String> header, @RequestBody String body){
 
@@ -101,6 +120,12 @@ public class Server {
         return new ResponseEntity<>(Base64.getEncoder().encodeToString(imageDataBytes), headers, HttpStatus.ACCEPTED);
     }
 
+    /**
+     * Handles the request to return the image with red channels isolated (black = no red, white = full red)
+     * @param header The HTTP header containing image metadata: num_rows, num_cols, num_channels
+     * @param body The HTTP body containing the image data
+     * @return The HTTP response to the client.
+     */
     @PostMapping("/red/")
     private ResponseEntity<String> getRedChannels(@RequestHeader Map<String, String> header, @RequestBody String body){
 
@@ -109,6 +134,12 @@ public class Server {
         return Server.getResponseColorIsolation(header, body, 0);
     }
 
+    /**
+     * Handles the request to return the image with green channels isolated (black = no green, white = full green)
+     * @param header The HTTP header containing image metadata: num_rows, num_cols, num_channels
+     * @param body The HTTP body containing the image data
+     * @return The HTTP response to the client.
+     */
     @PostMapping("/green/")
     private ResponseEntity<String> getGreenChannels(@RequestHeader Map<String, String> header, @RequestBody String body){
         System.out.println("Processing green request...");
@@ -116,6 +147,12 @@ public class Server {
         return Server.getResponseColorIsolation(header, body, 1);
     }
 
+    /**
+     * Handles the request to return the image with blue channels isolated (black = no blue, white = full blue)
+     * @param header The HTTP header containing image metadata: num_rows, num_cols, num_channels
+     * @param body The HTTP body containing the image data
+     * @return The HTTP response to the client.
+     */
     @PostMapping("/blue/")
     private ResponseEntity<String> getBlueChannels(@RequestHeader Map<String, String> header, @RequestBody String body){
         System.out.println("Processing blue request...");
@@ -123,6 +160,13 @@ public class Server {
         return Server.getResponseColorIsolation(header, body, 2);
     }
 
+    /**
+     * Helper function for isolating a color from an image.
+     * @param header The HTTP header containing image metadata: num_rows, num_cols, num_channels
+     * @param body The HTTP body containing the image data.
+     * @param channel The channel to isolate. 0 for red, 1 for green, 2 for blue.
+     * @return The HTTP response entity.
+     */
     private static ResponseEntity<String> getResponseColorIsolation(@RequestHeader Map<String, String> header, @RequestBody String body, int channel){
         int numRows = Integer.parseInt(header.get("num_rows"));
         int numCols = Integer.parseInt(header.get("num_cols"));
