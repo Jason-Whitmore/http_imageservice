@@ -1,12 +1,6 @@
 # HTTP Image Service
 
-This toy project was created to learn the following technologies:
-
-Maven, Spring Boot, Java HTTPClient 
-
-and the following skills:
-
-Server and client development, HTTP
+This toy project was created to learn server and client development along with Maven, Spring Boot, and Java HTTPClient.
 
 
 ## Running the project
@@ -65,7 +59,7 @@ This will print information to standard out about what commands are available.
 ### Stats
 Usage: ClientRunner stats [image path] [address]
 
-Example: ClientRunner stats image.png http://localhost:8080/
+Example: java -jar ClientRunner.jar stats image.png http://localhost:8080/
 
 Description: Server will respond with statistics about the image that was sent, including image size,
 mean color, and most commonly occurring color.
@@ -73,7 +67,7 @@ mean color, and most commonly occurring color.
 ### Gray
 Usage: ClientRunner gray [image path] [address] [output image path]
 
-Example: ClientRunner gray image.png http://localhost:8080/ gray_image.png
+Example: java -jar ClientRunner.jar gray image.png http://localhost:8080/ gray_image.png
 
 Description: Server will respond with the request image converted into grayscale. This output image will be
 saved to the specified location.
@@ -81,29 +75,29 @@ saved to the specified location.
 ### Red
 Usage: ClientRunner red [image path] [address] [output image path]
 
-Example: ClientRunner red image.png http://localhost:8080/ output.png
+Example: java -jar ClientRunner.jar red image.png http://localhost:8080/ output.png
 
 Description: Server will respond with the request image's red channel isolated. This output image will be
 saved to the specified location. The output image will be in grayscale, with white areas representing strong
-red signals, and black areas with weak red signals.
+red signals, and black areas representing weak red signals.
 
 ### Green
 Usage: ClientRunner green [image path] [address] [output image path]
 
-Example: ClientRunner green image.png http://localhost:8080/ output.png
+Example: java -jar ClientRunner.jar green image.png http://localhost:8080/ output.png
 
 Description: Server will respond with the request image's green channel isolated. This output image will be
 saved to the specified location. The output image will be in grayscale, with white areas representing strong
-green signals, and black areas with weak green signals.
+green signals, and black areas representing weak green signals.
 
 ### Blue
 Usage: ClientRunner blue [image path] [address] [output image path]
 
-Example: ClientRunner blue image.png http://localhost:8080/ output.png
+Example: java -jar ClientRunner.jar blue image.png http://localhost:8080/ output.png
 
 Description: Server will respond with the request image's blue channel isolated. This output image will be
 saved to the specified location. The output image will be in grayscale, with white areas representing strong
-blue signals, and black areas with weak blue signals.
+blue signals, and black areas representing weak blue signals.
 
 
 ## Example use
@@ -113,35 +107,37 @@ With this example image:
 ![Example input image](example_input.jpg)
 
 
-Running `java -jar stats example_input.jpg http://localhost:8080/` will output:
+Running `java -jar ClientRunner.jar stats example_input.jpg http://localhost:8080/` will output:
 
->Image statistics:
 
->Number of rows: 750
+    Image statistics:
 
->Number of columns: 1000
+    Number of rows: 750
 
->Number of channels: 3
+    Number of columns: 1000
 
->Most common color:
+    Number of channels: 3
 
->Channel 0: 10
+    Most common color:
 
->Channel 1: 18
+    Channel 0: 10
 
->Channel 2: 21
+    Channel 1: 18
 
->Occurrences: 1639
+    Channel 2: 21
 
->Mean color:
+    Occurrences: 1639
 
->Channel 0: 15
+    Mean color:
 
->Channel 1: 31
+    Channel 0: 15
 
->Channel 2: 19
+    Channel 1: 31
 
-Running `java -jar blue example_input.jpg http://localhost:8080/ blue_output.jpg` will output:
+    Channel 2: 19
+
+
+Running `java -jar ClientRunner.jar blue example_input.jpg http://localhost:8080/ blue_output.jpg` will output:
 
 ![Blue output image](blue_output.jpg)
 

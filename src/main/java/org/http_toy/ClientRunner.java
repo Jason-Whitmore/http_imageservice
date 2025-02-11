@@ -102,33 +102,33 @@ public class ClientRunner
 
         sb.append("Stats:\n");
         sb.append("Usage: ClientRunner stats [image path] [address]\n");
-        sb.append("Example: ClientRunner stats image.png http://localhost:8080/\n");
+        sb.append("Example: java -jar ClientRunner.jar stats image.png http://localhost:8080/\n");
         sb.append("Description: Server will respond with statistics about the image that was sent, including image size,\n");
         sb.append("mean color, and most commonly occurring color.\n\n");
 
         sb.append("Gray:\n");
         sb.append("Usage: ClientRunner gray [image path] [address] [output image path]\n");
-        sb.append("Example: ClientRunner gray image.png http://localhost:8080/ gray_image.png\n");
+        sb.append("Example: java -jar ClientRunner.jar gray image.png http://localhost:8080/ gray_image.png\n");
         sb.append("Description: Server will respond with the request image converted into grayscale. This output image will be\n");
         sb.append("saved to the specified location.\n\n");
 
         sb.append("Red:\n");
         sb.append("Usage: ClientRunner red [image path] [address] [output image path]\n");
-        sb.append("Example: ClientRunner red image.png http://localhost:8080/ output.png\n");
+        sb.append("Example: java -jar ClientRunner.jar red image.png http://localhost:8080/ output.png\n");
         sb.append("Description: Server will respond with the request image's red channel isolated. This output image will be\n");
         sb.append("saved to the specified location. The output image will be in grayscale, with white areas representing strong\n");
         sb.append("red signals, and black areas with weak red signals.\n\n");
 
         sb.append("Green:\n");
         sb.append("Usage: ClientRunner green [image path] [address] [output image path]\n");
-        sb.append("Example: ClientRunner green image.png http://localhost:8080/ output.png\n");
+        sb.append("Example: java -jar ClientRunner.jar green image.png http://localhost:8080/ output.png\n");
         sb.append("Description: Server will respond with the request image's green channel isolated. This output image will be\n");
         sb.append("saved to the specified location. The output image will be in grayscale, with white areas representing strong\n");
         sb.append("green signals, and black areas with weak green signals.\n\n");
 
         sb.append("Blue:\n");
         sb.append("Usage: ClientRunner blue [image path] [address] [output image path]\n");
-        sb.append("Example: ClientRunner blue image.png http://localhost:8080/ output.png\n");
+        sb.append("Example: java -jar ClientRunner.jar blue image.png http://localhost:8080/ output.png\n");
         sb.append("Description: Server will respond with the request image's blue channel isolated. This output image will be\n");
         sb.append("saved to the specified location. The output image will be in grayscale, with white areas representing strong\n");
         sb.append("blue signals, and black areas with weak blue signals.");
